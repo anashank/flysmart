@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model WatchedRoute {
+  id          String    @id @default(cuid())
+  email       String
+  origin      String
+  destination String
+  travelDate  DateTime
+  cabin       String
+  createdAt   DateTime  @default(now())
+  lastChecked DateTime?
+  alerts      Alert[]
+}
+
+model Alert {
+  id             String       @id @default(cuid())
+  watchedRouteId String
+  watchedRoute   WatchedRoute @relation(fields: [watchedRouteId], references: [id])
+  message        String
+  sentAt         DateTime     @default(now())
+}
