@@ -10,6 +10,7 @@ const MOCK_PROGRAMS = [
   { source: 'british',    airline: 'BA',  flightNumber: 'BA178',  stops: 0 },
   { source: 'virgin',     airline: 'VS',  flightNumber: 'VS003',  stops: 0 },
   { source: 'turkish',    airline: 'TK',  flightNumber: 'TK001',  stops: 1 },
+  { source: 'singapore',  airline: 'SQ',  flightNumber: 'SQ036',  stops: 0 },
 ];
 
 // Mileage costs by cabin and program (roughly realistic)
@@ -19,7 +20,8 @@ const MILEAGE_COSTS: Record<string, Partial<Record<CabinClass, number>>> = {
   flyingblue: { ECONOMY: 28000, BUSINESS: 50000, FIRST: 85000, PREMIUM_ECONOMY: 40000 },
   british:    { ECONOMY: 26000, BUSINESS: 55000, FIRST: 85000, PREMIUM_ECONOMY: 38000 },
   virgin:     { ECONOMY: 25000, BUSINESS: 60000, FIRST: 95000, PREMIUM_ECONOMY: 42000 },
-  turkish:    { ECONOMY: 22000, BUSINESS: 45000, FIRST: 80000, PREMIUM_ECONOMY: 35000 },
+  turkish:    { ECONOMY: 22000, BUSINESS: 45000, FIRST: 80000,  PREMIUM_ECONOMY: 35000 },
+  singapore:  { ECONOMY: 17500, BUSINESS: 42000, FIRST: 86000,  PREMIUM_ECONOMY: 30000 },
 };
 
 function makeMockOffer(
