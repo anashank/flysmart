@@ -83,6 +83,13 @@ function mapAvailability(raw: SeatsAeroAvailability, cabin: CabinClass): FlightO
   };
 }
 
+// All sources Seats.aero supports — searched in parallel
+const ALL_SOURCES = [
+  'aeroplan', 'united', 'delta', 'american', 'british', 'virginatlantic',
+  'turkish', 'ana', 'singapore', 'emirates', 'avianca', 'flyingblue',
+  'southwest', 'jetblue', 'alaska',
+];
+
 export class SeatsAeroAdapter implements FlightAdapter {
   private readonly apiKey: string;
 
@@ -92,35 +99,39 @@ export class SeatsAeroAdapter implements FlightAdapter {
     this.apiKey = key;
   }
 
-  async searchFlights(params: SearchParams): Promise<FlightOffer[]> {
+  private async searchSource(params: SearchParams, source: string): Promise<FlightOffer[]> {
     const query = new URLSearchParams({
       origin_airport: params.origin.toUpperCase(),
       destination_airport: params.destination.toUpperCase(),
       cabin: CABIN_PARAM[params.cabin],
       start_date: params.date,
       end_date: params.date,
-      take: '50',
+      source,
+      take: '10',
     });
 
     const res = await fetch(`${BASE_URL}/availability?${query}`, {
-      headers: {
-        'Partner-Authorization': this.apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Partner-Authorization': this.apiKey },
     });
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Seats.aero search failed: ${res.status} ${text}`);
-    }
+    if (!res.ok) return []; // silently skip unavailable sources
 
     const json = await res.json();
     const data: SeatsAeroAvailability[] = json.data ?? [];
 
-    // Only return entries where the requested cabin has availability
     return data
       .filter((r) => getCabinFields(r, params.cabin).available)
       .map((r) => mapAvailability(r, params.cabin));
+  }
+
+  async searchFlights(params: SearchParams): Promise<FlightOffer[]> {
+    const results = await Promise.allSettled(
+      ALL_SOURCES.map((source) => this.searchSource(params, source))
+    );
+
+    return results
+      .filter((r): r is PromiseFulfilledResult<FlightOffer[]> => r.status === 'fulfilled')
+      .flatMap((r) => r.value);
   }
 
   async confirmPrice(offer: FlightOffer): Promise<FlightOffer> {
