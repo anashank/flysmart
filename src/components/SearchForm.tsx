@@ -65,7 +65,10 @@ const inputClass =
             type="date"
             className={`${inputClass} tracking-normal`}
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => {
+              setDate(e.target.value);
+              e.target.blur();
+            }}
             required
             style={{ colorScheme: 'dark' }}
           />

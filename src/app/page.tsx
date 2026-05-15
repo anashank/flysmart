@@ -210,7 +210,7 @@ export default function Home() {
               Find Your Best Award Flight
             </h1>
             <p className="text-[#7a9ab8] max-w-xl mx-auto text-sm leading-relaxed">
-              Enter your route and points balances. Claude will search for flights, evaluate every
+              Enter your route and points balances. Our AI travel expert will search for flights, evaluate every
               redemption option, and tell you exactly how to book the best deal.
             </p>
           </div>
