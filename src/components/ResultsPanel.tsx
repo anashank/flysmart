@@ -64,14 +64,36 @@ function RecommendationPanel({ recommendation, streaming }: { recommendation: st
   const rec = parseRecommendation(recommendation);
   const hasStructure = rec.bestOption || rec.steps.length > 0;
 
-  // Fallback: render raw text if Claude didn't follow the format yet (still streaming)
+  // While streaming, show a skeleton until the structure is parseable
   if (!hasStructure) {
+    if (streaming) {
+      return (
+        <div className="rounded-lg border overflow-hidden" style={{ background: '#0f1829', borderColor: '#1a2d4a' }}>
+          <div className="px-5 pt-5 pb-4 border-b border-[#1a2d4a]">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-2 h-2 rounded-full bg-[#00d4ff] animate-pulse" style={{ boxShadow: '0 0 8px #00d4ff' }} />
+              <span className="font-mono text-xs text-[#00d4ff] uppercase tracking-widest">Best Option</span>
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 rounded animate-pulse w-4/5" style={{ background: '#1a2d4a' }} />
+              <div className="h-3 rounded animate-pulse w-2/3" style={{ background: '#1a2d4a' }} />
+            </div>
+          </div>
+          <div className="px-5 py-4 space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex gap-3 items-start">
+                <div className="w-5 h-5 rounded-full flex-shrink-0 animate-pulse" style={{ background: '#1a2d4a' }} />
+                <div className="h-3 rounded animate-pulse flex-1" style={{ background: '#1a2d4a', width: `${70 + i * 7}%` }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    // Streaming done but Claude didn't follow format — show raw as fallback
     return (
       <div className="rounded-lg border p-5 text-sm text-[#e2eaf5]" style={{ background: '#0f1829', borderColor: '#1a2d4a' }}>
-        <p className="text-[#7a9ab8]">
-          {recommendation}
-          {streaming && <span className="inline-block w-1.5 h-4 bg-[#00d4ff] ml-0.5 animate-pulse align-middle" />}
-        </p>
+        <p className="text-[#7a9ab8]">{recommendation}</p>
       </div>
     );
   }
