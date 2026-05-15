@@ -1,5 +1,5 @@
 import type { Tool, ToolResultBlockParam } from '@anthropic-ai/sdk/resources/messages';
-import { mockAdapter } from '@/adapters/mock';
+import { seatsAeroAdapter } from '@/adapters/seats-aero';
 import { PROGRAMS, type PointsCurrency } from '@/data/programs';
 import type { FlightOffer, CabinClass } from '@/adapters/types';
 
@@ -332,7 +332,7 @@ export async function handleToolCall(
       adults:      toolInput.adults as number,
     };
 
-    const flights = await mockAdapter.searchFlights(params);
+    const flights = await seatsAeroAdapter.searchFlights(params);
     const cacheKey = `${params.origin}-${params.destination}-${params.date}-${params.cabin}`;
     flightCache.set(cacheKey, flights);
 
@@ -376,7 +376,7 @@ export async function handleToolCall(
 
     for (let d = -daysBefore; d <= daysAfter; d++) {
       const date = addDays(targetDate, d);
-      const flights = await mockAdapter.searchFlights({ origin, destination, date, cabin, adults });
+      const flights = await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults });
 
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
@@ -442,7 +442,7 @@ export async function handleToolCall(
     const allFlights: FlightOffer[] = [];
 
     for (const combo of searches) {
-      const flights = await mockAdapter.searchFlights({ ...combo, date, cabin, adults });
+      const flights = await seatsAeroAdapter.searchFlights({ ...combo, date, cabin, adults });
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
         program: f.source ?? '',
@@ -510,7 +510,7 @@ export async function handleToolCall(
 
     const cacheKey = `${origin}-${destination}-${date}-${cabin}`;
     const cached   = flightCache.get(cacheKey);
-    const flights  = cached ?? await mockAdapter.searchFlights({ origin, destination, date, cabin, adults: 1 });
+    const flights  = cached ?? await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults: 1 });
 
     if (!cached) flightCache.set(cacheKey, flights);
 
