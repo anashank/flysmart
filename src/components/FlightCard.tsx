@@ -15,7 +15,7 @@ const AIRLINE_NAMES: Record<string, string> = {
   B6: 'JetBlue',           AS: 'Alaska Airlines',   QR: 'Qatar Airways',
   CX: 'Cathay Pacific',    JL: 'Japan Airlines',    MH: 'Malaysia Airlines',
   TG: 'Thai Airways',      BR: 'EVA Air',           CI: 'China Airlines',
-  OZ: 'Asiana',            KE: 'Korean Air',        MS: 'EgyptAir',
+  OZ: 'Asiana',            KE: 'Korean Air',        AI: 'Air India',        MS: 'EgyptAir',
   ET: 'Ethiopian',         SA: 'South African',     UX: 'Air Europa',
   IB: 'Iberia',            VY: 'Vueling',           EI: 'Aer Lingus',
   SK: 'SAS',               AY: 'Finnair',           TP: 'TAP Air Portugal',
@@ -111,8 +111,15 @@ export default function FlightCard({ flight }: Props) {
             <span className="text-[#00d4ff] text-xs">✈</span>
             <div className="flex-1 h-px bg-[#1a2d4a]" />
           </div>
-          <div className="font-mono text-xs text-[#4a6280]">
-            {flight.stops === 0 ? 'Nonstop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+          <div className="font-mono text-xs text-[#4a6280] text-center">
+            {flight.stops === 0
+              ? 'Nonstop'
+              : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+            {flight.stops > 0 && airlineCodes.length > 1 && (
+              <div className="text-[10px] text-[#3a5270] mt-0.5">
+                {airlineCodes.join(' · ')}
+              </div>
+            )}
           </div>
         </div>
         <div className="text-center">
@@ -194,7 +201,7 @@ function airlineDomain(code: string): string {
     SQ: 'singaporeair.com', EK: 'emirates.com', TK: 'turkishairlines.com', NH: 'ana.co.jp',
     AV: 'avianca.com', WN: 'southwest.com', B6: 'jetblue.com', AS: 'alaskaair.com',
     QR: 'qatarairways.com', CX: 'cathaypacific.com', JL: 'jal.com', IB: 'iberia.com',
-    AY: 'finnair.com', SK: 'flysas.com', TP: 'flytap.com', EI: 'aerlingus.com',
+    AI: 'airindia.in', AY: 'finnair.com', SK: 'flysas.com', TP: 'flytap.com', EI: 'aerlingus.com',
   };
   return domains[code] ?? 'google.com';
 }
