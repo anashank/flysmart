@@ -148,7 +148,7 @@ export default function FlightCard({ flight }: Props) {
           </span>
           {flight.taxes != null && flight.taxes > 0 && (
             <span className="font-mono text-xs text-[#4a6280] ml-2">
-              +${flight.taxes} taxes
+              +${(flight.taxes / 100).toFixed(2)} taxes
             </span>
           )}
           {flight.remainingSeats != null && flight.remainingSeats > 0 && (
