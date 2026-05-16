@@ -116,8 +116,17 @@ export default function FlightCard({ flight }: Props) {
               ? 'Nonstop'
               : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
             {flight.stops > 0 && airlineCodes.length > 1 && (
-              <div className="text-[10px] text-[#3a5270] mt-0.5">
-                {airlineCodes.join(' · ')}
+              <div className="mt-1 flex flex-col items-center gap-0.5">
+                {airlineCodes.map((code, i) => (
+                  <div key={code} className="flex flex-col items-center">
+                    <span className="text-[10px] text-[#7a9ab8]">
+                      {code} · {AIRLINE_NAMES[code] ?? 'Unknown'}
+                    </span>
+                    {i < airlineCodes.length - 1 && (
+                      <span className="text-[9px] text-[#2a4260]">↓</span>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
