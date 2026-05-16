@@ -3,6 +3,39 @@ import { seatsAeroAdapter } from '@/adapters/seats-aero';
 import { PROGRAMS, type PointsCurrency } from '@/data/programs';
 import type { FlightOffer, CabinClass } from '@/adapters/types';
 
+// ── Points currency → Seats.aero source keys ────────────────────────────────
+const CURRENCY_TO_SOURCES: Record<PointsCurrency, string[]> = {
+  // Bank cards transfer to these airline programs
+  chase_ur:        ['aeroplan', 'united', 'southwest', 'british', 'flyingblue', 'singapore', 'virginatlantic'],
+  amex_mr:         ['delta', 'aeroplan', 'british', 'flyingblue', 'singapore', 'ana', 'avianca', 'emirates'],
+  citi_typ:        ['flyingblue', 'singapore', 'turkish', 'avianca', 'virginatlantic'],
+  capital_one:     ['aeroplan', 'flyingblue', 'singapore', 'turkish', 'avianca', 'emirates', 'ana'],
+  // Airline programs book on their own source
+  united:          ['united'],
+  delta:           ['delta'],
+  american:        ['american'],
+  british_avios:   ['british'],
+  aeroplan:        ['aeroplan'],
+  flying_blue:     ['flyingblue'],
+  singapore:       ['singapore'],
+  emirates:        ['emirates'],
+  virgin_atlantic: ['virginatlantic'],
+  turkish:         ['turkish'],
+  ana:             ['ana'],
+  avianca:         ['avianca'],
+  southwest:       ['southwest'],
+};
+
+function sourcesForBalances(balances: Partial<Record<PointsCurrency, number>>): string[] {
+  const sources = new Set<string>();
+  for (const [currency, amount] of Object.entries(balances)) {
+    if (!amount || amount <= 0) continue;
+    const mapped = CURRENCY_TO_SOURCES[currency as PointsCurrency] ?? [];
+    mapped.forEach((s) => sources.add(s));
+  }
+  return sources.size > 0 ? Array.from(sources) : []; // empty = search all
+}
+
 // ── Nearby airport clusters ─────────────────────────────────────────────────
 const NEARBY_AIRPORTS: Record<string, string[]> = {
   // US — New York area
@@ -319,7 +352,8 @@ export const TOOLS: Tool[] = [
 export async function handleToolCall(
   toolName: string,
   toolInput: Record<string, unknown>,
-  flightCache: Map<string, FlightOffer[]>
+  flightCache: Map<string, FlightOffer[]>,
+  pointsBalances: Partial<Record<PointsCurrency, number>> = {}
 ): Promise<{ result: ToolResultBlockParam['content']; flights?: FlightOffer[] }> {
 
   // ── search_flights ─────────────────────────────────────────────────────────
@@ -330,6 +364,7 @@ export async function handleToolCall(
       date:        toolInput.date as string,
       cabin:       toolInput.cabin as CabinClass,
       adults:      toolInput.adults as number,
+      sources:     sourcesForBalances(pointsBalances),
     };
 
     const flights = await seatsAeroAdapter.searchFlights(params);
@@ -376,7 +411,7 @@ export async function handleToolCall(
 
     for (let d = -daysBefore; d <= daysAfter; d++) {
       const date = addDays(targetDate, d);
-      const flights = await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults });
+      const flights = await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
 
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
@@ -442,7 +477,7 @@ export async function handleToolCall(
     const allFlights: FlightOffer[] = [];
 
     for (const combo of searches) {
-      const flights = await seatsAeroAdapter.searchFlights({ ...combo, date, cabin, adults });
+      const flights = await seatsAeroAdapter.searchFlights({ ...combo, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
         program: f.source ?? '',
@@ -510,7 +545,7 @@ export async function handleToolCall(
 
     const cacheKey = `${origin}-${destination}-${date}-${cabin}`;
     const cached   = flightCache.get(cacheKey);
-    const flights  = cached ?? await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults: 1 });
+    const flights  = cached ?? await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults: 1, sources: sourcesForBalances(pointsBalances) });
 
     if (!cached) flightCache.set(cacheKey, flights);
 

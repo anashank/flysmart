@@ -6,6 +6,7 @@ export interface SearchParams {
   date: string; // YYYY-MM-DD
   cabin: CabinClass;
   adults: number;
+  sources?: string[]; // Seats.aero source keys to query; omit to search all
 }
 
 export interface FlightSegment {

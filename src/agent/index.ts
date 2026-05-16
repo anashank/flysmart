@@ -113,7 +113,8 @@ Please search for flights, evaluate my redemption options, and give me your top 
         const { result, flights } = await handleToolCall(
           block.name,
           block.input as Record<string, unknown>,
-          flightCache
+          flightCache,
+          input.pointsBalances
         );
 
         if (flights) {

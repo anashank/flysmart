@@ -125,8 +125,9 @@ export class SeatsAeroAdapter implements FlightAdapter {
   }
 
   async searchFlights(params: SearchParams): Promise<FlightOffer[]> {
+    const sources = params.sources?.length ? params.sources : ALL_SOURCES;
     const results = await Promise.allSettled(
-      ALL_SOURCES.map((source) => this.searchSource(params, source))
+      sources.map((source) => this.searchSource(params, source))
     );
 
     return results
