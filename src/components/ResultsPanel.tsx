@@ -190,7 +190,7 @@ export default function ResultsPanel({ flights, recommendation, searchParams, st
               <p className="font-mono text-[#4a6280] text-xs mt-1">Try different dates or a nearby airport.</p>
             </div>
           ) : (
-            flights.slice(0, 8).map((f) => <FlightCard key={f.id} flight={f} />)
+            flights.slice(0, 8).map((f, i) => <FlightCard key={`${f.id}-${f.source ?? ''}-${i}`} flight={f} />)
           )}
         </div>
       </div>
