@@ -51,7 +51,7 @@ function getCabinFields(raw: SeatsAeroAvailability, cabin: CabinClass) {
 
 function mapAvailability(raw: SeatsAeroAvailability, cabin: CabinClass): FlightOffer {
   const { available, mileageCost, remainingSeats } = getCabinFields(raw, cabin);
-  const dateStr = raw.ParsedDate ?? raw.Date?.split('T')[0] ?? '';
+  const dateStr = raw.ParsedDate?.split('T')[0] ?? raw.Date?.split('T')[0] ?? '';
   const origin = raw.Route?.OriginAirport ?? '';
   const destination = raw.Route?.DestinationAirport ?? '';
 
