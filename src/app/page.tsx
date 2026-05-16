@@ -138,7 +138,21 @@ export default function Home() {
 
       while (true) {
         const { done, value } = await reader.read();
-        if (done) break;
+        if (done) {
+          // Stream closed without a done event — resolve whatever we have
+          setAppState((s) => {
+            if (s === 'streaming') {
+              if (accFlights.length > 0 || accRec) {
+                setResults({ flights: accFlights, recommendation: accRec, searchParams: values });
+                return 'results';
+              }
+              setError('No results found. Try different dates or airports.');
+              return 'error';
+            }
+            return s;
+          });
+          break;
+        }
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
