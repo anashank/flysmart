@@ -22,60 +22,55 @@ interface SeatsAeroAvailability {
   Route: { OriginAirport: string; DestinationAirport: string };
   Date: string;
   ParsedDate?: string;
-  YAvailable: boolean;
-  WAvailable: boolean;
-  JAvailable: boolean;
-  FAvailable: boolean;
-  YMileageCost: string;
-  WMileageCost: string;
-  JMileageCost: string;
-  FMileageCost: string;
-  YRemainingSeats: number;
-  WRemainingSeats: number;
-  JRemainingSeats: number;
-  FRemainingSeats: number;
+  YAvailable: boolean; WAvailable: boolean; JAvailable: boolean; FAvailable: boolean;
+  YMileageCost: string; WMileageCost: string; JMileageCost: string; FMileageCost: string;
+  YRemainingSeats: number; WRemainingSeats: number; JRemainingSeats: number; FRemainingSeats: number;
+  YAirlines: string; WAirlines: string; JAirlines: string; FAirlines: string;
+  YTotalTaxes: number; WTotalTaxes: number; JTotalTaxes: number; FTotalTaxes: number;
   Source: string;
-  Airlines: string;
-  FlightNumbers: string;
-  Stops: number;
+  [key: string]: unknown;
 }
 
 function getCabinFields(raw: SeatsAeroAvailability, cabin: CabinClass) {
   const k = CABIN_KEY[cabin];
   return {
-    available: raw[`${k}Available` as keyof SeatsAeroAvailability] as boolean,
-    mileageCost: parseInt((raw[`${k}MileageCost` as keyof SeatsAeroAvailability] as string) ?? '0', 10) || 0,
-    remainingSeats: (raw[`${k}RemainingSeats` as keyof SeatsAeroAvailability] as number) ?? 0,
+    available:      raw[`${k}Available`]      as boolean,
+    mileageCost:    parseInt((raw[`${k}MileageCost`] as string) ?? '0', 10) || 0,
+    remainingSeats: (raw[`${k}RemainingSeats`] as number) ?? 0,
+    airlines:       ((raw[`${k}Airlines`] as string) ?? '').split(',').map(s => s.trim()).filter(Boolean),
+    taxes:          (raw[`${k}TotalTaxes`] as number) ?? 0,
   };
 }
 
 function mapAvailability(raw: SeatsAeroAvailability, cabin: CabinClass): FlightOffer {
-  const { available, mileageCost, remainingSeats } = getCabinFields(raw, cabin);
+  const { available, mileageCost, remainingSeats, airlines, taxes } = getCabinFields(raw, cabin);
   const dateStr = raw.ParsedDate?.split('T')[0] ?? raw.Date?.split('T')[0] ?? '';
   const origin = raw.Route?.OriginAirport ?? '';
   const destination = raw.Route?.DestinationAirport ?? '';
+  const primaryAirline = airlines[0] ?? '';
 
   const segment: FlightSegment = {
-    departure: { iataCode: origin, at: `${dateStr}T00:00:00` },
-    arrival: { iataCode: destination, at: `${dateStr}T00:00:00` },
-    carrierCode: raw.Airlines ?? '',
-    number: raw.FlightNumbers ?? '',
+    departure: { iataCode: origin, at: dateStr ? `${dateStr}T00:00:00` : '' },
+    arrival:   { iataCode: destination, at: dateStr ? `${dateStr}T00:00:00` : '' },
+    carrierCode: primaryAirline,
+    number: '',
     duration: '',
   };
 
   return {
     id: raw.ID,
-    airline: raw.Airlines ?? '',
-    flightNumber: raw.FlightNumbers ?? '',
-    departure: `${dateStr}T00:00:00`,
-    arrival: `${dateStr}T00:00:00`,
+    airline: airlines.join(', '),
+    flightNumber: '',
+    departure: dateStr ? `${dateStr}T00:00:00` : '',
+    arrival:   dateStr ? `${dateStr}T00:00:00` : '',
     duration: '',
     cabin,
-    stops: raw.Stops ?? 0,
+    stops: airlines.length > 1 ? airlines.length - 1 : 0,
     segments: [segment],
     price: mileageCost,
     currency: raw.Source ?? 'unknown',
     mileageCost,
+    taxes,
     source: raw.Source,
     available,
     remainingSeats,

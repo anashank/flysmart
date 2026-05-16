@@ -31,6 +31,7 @@ export interface FlightOffer {
   currency: string;
   // Award-specific fields (populated by Seats.aero adapter)
   mileageCost?: number;     // award cost in miles
+  taxes?: number;           // carrier taxes in USD
   source?: string;          // mileage program (e.g. "aeroplan", "united")
   available?: boolean;      // whether award space is confirmed open
   remainingSeats?: number;
