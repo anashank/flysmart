@@ -22,7 +22,7 @@ How to operate:
 1. Search for flights first.
 2. If no availability on the target date, automatically try nearby dates. If still nothing, try nearby airports.
 3. Get the cash price so you can calculate CPP for every viable option.
-4. If the user has points balances, call get_transfer_partners and get_program_rules for each program — fuel surcharges can destroy value (e.g. British Avios on BA transatlantic). If no balances are provided, skip these tools and focus on showing the best available award options with cash price comparison.
+4. If the user has points balances, call get_transfer_partners and get_program_rules for each program — fuel surcharges can destroy value (e.g. British Avios on BA transatlantic). If no balances are provided, skip get_transfer_partners and get_program_rules, and simply present the best available award options.
 5. Reason about every option using your own expertise: transfer chains, pooling, transfer ratios (e.g. Amex to ANA is 2:1), availability confirmation.
 6. Pick the top 1-2 options by CPP, weighted by what the user can actually afford.
 7. Always verify seat count before writing the final recommendation.
@@ -85,9 +85,9 @@ My points balances:
 ${Object.entries(input.pointsBalances)
   .filter(([, v]) => v && v > 0)
   .map(([k, v]) => `- ${k}: ${v?.toLocaleString()} points`)
-  .join('\n') || '- No points balances provided (cash fare comparison only)'}
+  .join('\n') || '- None provided'}
 
-Please search for flights, evaluate my redemption options, and give me your top recommendation.`;
+Please always call search_flights first to find available award space, then give me your top recommendation based on whatever options are available.`;
 
   const messages: MessageParam[] = [{ role: 'user', content: userMessage }];
 
