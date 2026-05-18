@@ -45,16 +45,26 @@ function parseRecommendation(text: string): ParsedRec {
 }
 
 function Bold({ text }: { text: string }) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  // Strip markdown checkboxes [ ] and [x] then render **bold** and [label](url) links
+  const cleaned = text.replace(/\[[ xX]\]\s*/g, '');
+  const parts = cleaned.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g);
   return (
     <>
-      {parts.map((p, i) =>
-        p.startsWith('**') && p.endsWith('**') ? (
-          <strong key={i} className="text-[#00d4ff]">{p.slice(2, -2)}</strong>
-        ) : (
-          <span key={i}>{p}</span>
-        )
-      )}
+      {parts.map((p, i) => {
+        if (p.startsWith('**') && p.endsWith('**')) {
+          return <strong key={i} className="text-[#00d4ff]">{p.slice(2, -2)}</strong>;
+        }
+        const linkMatch = p.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (linkMatch) {
+          return (
+            <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
+              className="text-[#00d4ff] underline underline-offset-2 hover:text-[#00d4ff]/80">
+              {linkMatch[1]}
+            </a>
+          );
+        }
+        return <span key={i}>{p}</span>;
+      })}
     </>
   );
 }
