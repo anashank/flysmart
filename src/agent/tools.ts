@@ -1,7 +1,7 @@
 import type { Tool, ToolResultBlockParam } from '@anthropic-ai/sdk/resources/messages';
 import { seatsAeroAdapter } from '@/adapters/seats-aero';
 import { PROGRAMS, type PointsCurrency } from '@/data/programs';
-import type { FlightOffer, CabinClass } from '@/adapters/types';
+import type { FlightOffer, FlightAdapter, CabinClass } from '@/adapters/types';
 
 // ── Points currency → Seats.aero source keys ────────────────────────────────
 const CURRENCY_TO_SOURCES: Record<PointsCurrency, string[]> = {
@@ -353,7 +353,8 @@ export async function handleToolCall(
   toolName: string,
   toolInput: Record<string, unknown>,
   flightCache: Map<string, FlightOffer[]>,
-  pointsBalances: Partial<Record<PointsCurrency, number>> = {}
+  pointsBalances: Partial<Record<PointsCurrency, number>> = {},
+  adapter: FlightAdapter = seatsAeroAdapter
 ): Promise<{ result: ToolResultBlockParam['content']; flights?: FlightOffer[] }> {
 
   // ── search_flights ─────────────────────────────────────────────────────────
@@ -367,7 +368,7 @@ export async function handleToolCall(
       sources:     sourcesForBalances(pointsBalances),
     };
 
-    const flights = await seatsAeroAdapter.searchFlights(params);
+    const flights = await adapter.searchFlights(params);
     const cacheKey = `${params.origin}-${params.destination}-${params.date}-${params.cabin}`;
     flightCache.set(cacheKey, flights);
 
@@ -411,7 +412,7 @@ export async function handleToolCall(
 
     for (let d = -daysBefore; d <= daysAfter; d++) {
       const date = addDays(targetDate, d);
-      const flights = await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
+      const flights = await adapter.searchFlights({ origin, destination, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
 
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
@@ -477,7 +478,7 @@ export async function handleToolCall(
     const allFlights: FlightOffer[] = [];
 
     for (const combo of searches) {
-      const flights = await seatsAeroAdapter.searchFlights({ ...combo, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
+      const flights = await adapter.searchFlights({ ...combo, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
         program: f.source ?? '',
@@ -545,7 +546,7 @@ export async function handleToolCall(
 
     const cacheKey = `${origin}-${destination}-${date}-${cabin}`;
     const cached   = flightCache.get(cacheKey);
-    const flights  = cached ?? await seatsAeroAdapter.searchFlights({ origin, destination, date, cabin, adults: 1, sources: sourcesForBalances(pointsBalances) });
+    const flights  = cached ?? await adapter.searchFlights({ origin, destination, date, cabin, adults: 1, sources: sourcesForBalances(pointsBalances) });
 
     if (!cached) flightCache.set(cacheKey, flights);
 

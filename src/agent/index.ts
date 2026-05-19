@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam, ContentBlock } from '@anthropic-ai/sdk/resources/messages';
 import { TOOLS, handleToolCall } from './tools';
-import type { FlightOffer } from '@/adapters/types';
+import type { FlightOffer, FlightAdapter } from '@/adapters/types';
 import type { PointsCurrency } from '@/data/programs';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -69,7 +69,8 @@ const TOOL_STATUS: Record<string, string> = {
 
 export async function runAgentStream(
   input: AgentInput,
-  onEvent: (event: AgentEvent) => void
+  onEvent: (event: AgentEvent) => void,
+  adapter?: FlightAdapter
 ): Promise<void> {
   const flightCache = new Map<string, FlightOffer[]>();
   const allFlights: FlightOffer[] = [];
@@ -114,7 +115,8 @@ Please always call search_flights first to find available award space, then give
           block.name,
           block.input as Record<string, unknown>,
           flightCache,
-          input.pointsBalances
+          input.pointsBalances,
+          adapter
         );
 
         if (flights) {
