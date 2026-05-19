@@ -2,7 +2,7 @@
 
 FlySmart uses Claude as an AI travel agent to find the best strategy for booking flights with your points and miles. You enter your route, dates, and points balances — Claude searches real award availability, evaluates every transfer partner and redemption option, and returns a plain-English recommendation with step-by-step booking instructions.
 
-🔗 **[Live Demo](https://flysmart-three.vercel.app)**
+🔗 **[Live Demo](https://flysmart-three.vercel.app/demo)**
 
 ## How it works
 
