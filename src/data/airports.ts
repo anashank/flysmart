@@ -92,6 +92,7 @@ export const AIRPORTS: Airport[] = [
   { code: 'DEL', name: 'Indira Gandhi International', city: 'New Delhi', country: 'IN' },
   { code: 'BOM', name: 'Chhatrapati Shivaji Maharaj International', city: 'Mumbai', country: 'IN' },
   { code: 'BLR', name: 'Kempegowda International', city: 'Bangalore', country: 'IN' },
+  { code: 'MAA', name: 'Chennai International', city: 'Chennai', country: 'IN' },
   // Middle East & Africa
   { code: 'DXB', name: 'Dubai International Airport', city: 'Dubai', country: 'AE' },
   { code: 'AUH', name: 'Abu Dhabi International Airport', city: 'Abu Dhabi', country: 'AE' },
