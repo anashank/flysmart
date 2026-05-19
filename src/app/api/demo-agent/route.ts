@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
-import { runAgentStream } from '@/agent';
-import { mockAdapter } from '@/adapters/mock';
+import { runDemoAgentStream } from '@/agent/demo-agent';
+import type { PointsCurrency } from '@/data/programs';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -20,10 +20,9 @@ export async function POST(req: NextRequest) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(data)}\n\n`));
       };
       try {
-        await runAgentStream(
-          { origin, destination, date, cabin, adults: adults ?? 1, pointsBalances: {} },
-          send,
-          mockAdapter
+        await runDemoAgentStream(
+          { origin, destination, date, cabin, adults: adults ?? 1, pointsBalances: {} as Partial<Record<PointsCurrency, number>> },
+          send
         );
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
