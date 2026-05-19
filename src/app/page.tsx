@@ -242,9 +242,19 @@ export default function Home() {
         {isLoading && <FlightLoader message={status} />}
 
         {appState === 'error' && (
-          <div className="mt-6 rounded-lg border border-red-900/40 bg-red-950/20 p-4 space-y-1">
-            <p className="font-mono text-sm text-red-400">Error: {error}</p>
-            <p className="font-mono text-xs text-red-600">Check the terminal (npm run dev) for the full server-side error.</p>
+          <div className="mt-6 rounded-lg border p-4 space-y-1"
+            style={{ borderColor: error.includes('rate limit') ? '#78350f' : '#450a0a', background: error.includes('rate limit') ? '#1c100220' : '#1a000020' }}>
+            {error.includes('rate limit') ? (
+              <>
+                <p className="font-mono text-sm text-amber-400">⏱ Rate limit reached</p>
+                <p className="font-mono text-xs text-amber-600">{error}</p>
+              </>
+            ) : (
+              <>
+                <p className="font-mono text-sm text-red-400">Error: {error}</p>
+                <p className="font-mono text-xs text-red-600">Check the terminal (npm run dev) for the full server-side error.</p>
+              </>
+            )}
           </div>
         )}
 

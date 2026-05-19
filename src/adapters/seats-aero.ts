@@ -78,11 +78,9 @@ function mapAvailability(raw: SeatsAeroAvailability, cabin: CabinClass): FlightO
   };
 }
 
-// All sources Seats.aero supports — searched in parallel
+// Default sources when no wallet is provided — most popular programs only (reduces API calls)
 const ALL_SOURCES = [
-  'aeroplan', 'united', 'delta', 'american', 'british', 'virginatlantic',
-  'turkish', 'ana', 'singapore', 'emirates', 'avianca', 'flyingblue',
-  'southwest', 'jetblue', 'alaska',
+  'aeroplan', 'united', 'flyingblue', 'british', 'virginatlantic',
 ];
 
 export class SeatsAeroAdapter implements FlightAdapter {
@@ -109,7 +107,8 @@ export class SeatsAeroAdapter implements FlightAdapter {
       headers: { 'Partner-Authorization': this.apiKey },
     });
 
-    if (!res.ok) return []; // silently skip unavailable sources
+    if (res.status === 429) throw new Error('RATE_LIMITED');
+    if (!res.ok) return [];
 
     const json = await res.json();
     const data: SeatsAeroAvailability[] = json.data ?? [];
@@ -124,6 +123,14 @@ export class SeatsAeroAdapter implements FlightAdapter {
     const results = await Promise.allSettled(
       sources.map((source) => this.searchSource(params, source))
     );
+
+    const rateLimited = results.filter(
+      (r) => r.status === 'rejected' && (r.reason as Error)?.message === 'RATE_LIMITED'
+    );
+
+    if (rateLimited.length === results.length) {
+      throw new Error('Seats.aero rate limit reached. Please wait a few minutes and try again.');
+    }
 
     return results
       .filter((r): r is PromiseFulfilledResult<FlightOffer[]> => r.status === 'fulfilled')
