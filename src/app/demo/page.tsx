@@ -138,10 +138,16 @@ export default function DemoPage() {
             <span className="text-[#00d4ff] text-xl">✈</span>
             <span className="font-mono font-bold text-[#e2eaf5] tracking-widest uppercase text-sm">FlySmart</span>
           </div>
-          <span className="font-mono text-xs px-3 py-1 rounded-full border border-[#f59e0b40] text-[#f59e0b]"
-            style={{ background: '#f59e0b10' }}>
-            Demo Mode · Mock Data
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs px-3 py-1 rounded-full border border-[#f59e0b40] text-[#f59e0b]"
+              style={{ background: '#f59e0b10' }}>
+              Demo Mode
+            </span>
+            <span className="font-mono text-xs px-3 py-1 rounded-full border border-[#a855f740] text-[#a855f7]"
+              style={{ background: '#a855f710' }}>
+              Powered by Llama
+            </span>
+          </div>
         </div>
       </header>
 
