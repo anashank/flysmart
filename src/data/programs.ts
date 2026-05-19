@@ -31,14 +31,14 @@ export interface ProgramMeta {
 }
 
 const favicon = (domain: string) =>
-  `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+  `https://logo.clearbit.com/${domain}`;
 
 export const PROGRAM_META: Record<PointsCurrency, ProgramMeta> = {
   // ── Credit cards ──────────────────────────────────────────────
   chase_ur:     { label: 'Chase UR',          color: '#fff', bg: '#1a3a6b', initials: 'UR', category: 'card',    logoUrl: favicon('chase.com') },
   amex_mr:      { label: 'Amex MR',           color: '#fff', bg: '#016FD0', initials: 'MR', category: 'card',    logoUrl: favicon('americanexpress.com') },
   citi_typ:     { label: 'Citi TYP',          color: '#fff', bg: '#c41230', initials: 'TY', category: 'card',    logoUrl: favicon('citi.com') },
-  capital_one:  { label: 'Capital One',       color: '#fff', bg: '#c8102e', initials: 'C1', category: 'card',    logoUrl: favicon('capitalone.com') },
+  capital_one:  { label: 'Capital One',       color: '#fff', bg: '#c8102e', initials: 'C1', category: 'card',    logoUrl: 'https://logo.clearbit.com/capitalone.com' },
   // ── Frequent flyer ────────────────────────────────────────────
   united:       { label: 'United Miles',      color: '#fff', bg: '#003087', initials: 'UA', category: 'airline', logoUrl: favicon('united.com') },
   delta:        { label: 'Delta SkyMiles',    color: '#fff', bg: '#c01933', initials: 'DL', category: 'airline', logoUrl: favicon('delta.com') },
