@@ -120,8 +120,10 @@ Please always call search_flights first to find available award space, then give
         );
 
         if (flights) {
-          allFlights.push(...flights);
-          onEvent({ type: 'flights', flights });
+          const existingIds = new Set(allFlights.map((f) => `${f.airline}|${f.source}|${f.cabin}`));
+          const newFlights = flights.filter((f) => !existingIds.has(`${f.airline}|${f.source}|${f.cabin}`));
+          allFlights.push(...newFlights);
+          if (newFlights.length > 0) onEvent({ type: 'flights', flights: newFlights });
         }
 
         toolResults.push({
