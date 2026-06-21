@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import SearchForm, { type SearchFormValues } from '@/components/SearchForm';
 import ResultsPanel from '@/components/ResultsPanel';
+import ThemeToggle from '@/components/ThemeToggle';
 import type { FlightOffer } from '@/adapters/types';
 
 type AppState = 'idle' | 'streaming' | 'results' | 'error';
@@ -131,22 +132,23 @@ export default function DemoPage() {
         <div className="aurora-blob" />
       </div>
 
-      <header className="relative z-10 border-b border-[#1a2d4a] px-6 py-4"
-        style={{ backdropFilter: 'blur(12px)', background: 'rgba(7,13,26,0.7)' }}>
+      <header className="relative z-10 border-b px-6 py-4"
+        style={{ backdropFilter: 'blur(12px)', background: 'var(--av-header)', borderColor: 'var(--av-border)' }}>
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-[#00d4ff] text-xl">✈</span>
-            <span className="font-mono font-bold text-[#e2eaf5] tracking-widest uppercase text-sm">FlySmart</span>
+            <span className="text-[var(--av-accent)] text-xl">✈</span>
+            <span className="font-mono font-bold text-[var(--av-text)] tracking-widest uppercase text-sm">FlySmart</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-mono text-xs px-3 py-1 rounded-full border border-[#f59e0b40] text-[#f59e0b]"
-              style={{ background: '#f59e0b10' }}>
+            <span className="font-mono text-xs px-3 py-1 rounded-full border text-[var(--av-gold)]"
+              style={{ borderColor: 'var(--av-gold)', background: 'transparent', opacity: 0.8 }}>
               Demo Mode
             </span>
             <span className="font-mono text-xs px-3 py-1 rounded-full border border-[#a855f740] text-[#a855f7]"
               style={{ background: '#a855f710' }}>
               Powered by Llama
             </span>
+            <ThemeToggle />
           </div>
         </div>
       </header>

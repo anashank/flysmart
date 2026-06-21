@@ -53,12 +53,12 @@ export default function WatchButton({ origin, destination, date, cabin }: Props)
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 bg-[#0a1526] border border-[#30363d] rounded-lg px-3 py-2 text-sm text-[#e6edf3] placeholder-[#6e7681] focus:outline-none focus:border-[#58a6ff] font-mono"
+            className="flex-1 bg-[#0a1526] border border-[var(--av-border)] rounded-lg px-3 py-2 text-sm text-[var(--av-text)] placeholder-[var(--av-muted)] focus:outline-none focus:border-[var(--av-accent)] font-mono"
           />
           <button
             onClick={handleWatch}
             disabled={state === 'loading' || !email}
-            className="px-4 py-2 rounded-lg border border-[#58a6ff]/40 text-[#58a6ff] font-mono text-xs uppercase tracking-widest hover:bg-[#58a6ff]/10 transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg border border-[var(--av-accent)]/40 text-[var(--av-accent)] font-mono text-xs uppercase tracking-widest hover:bg-[var(--av-accent)]/10 transition-colors disabled:opacity-50"
           >
             {state === 'loading' ? '...' : 'Watch'}
           </button>
@@ -73,7 +73,7 @@ export default function WatchButton({ origin, destination, date, cabin }: Props)
   return (
     <button
       onClick={() => setState('input')}
-      className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#30363d] text-[#8b949e] hover:border-[#58a6ff]/40 hover:text-[#58a6ff] transition-colors font-mono text-xs uppercase tracking-widest"
+      className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[var(--av-border)] text-[var(--av-text-dim)] hover:border-[var(--av-accent)]/40 hover:text-[var(--av-accent)] transition-colors font-mono text-xs uppercase tracking-widest"
     >
       <span>◉</span>
       <span>Watch this route</span>

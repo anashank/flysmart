@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import SearchForm, { type SearchFormValues } from '@/components/SearchForm';
 import ResultsPanel from '@/components/ResultsPanel';
+import ThemeToggle from '@/components/ThemeToggle';
 import type { FlightOffer } from '@/adapters/types';
 
 type AppState = 'idle' | 'streaming' | 'results' | 'error';
@@ -17,10 +18,10 @@ function PlaneSVG({ size = 38 }: { size?: number }) {
   const scale = size / 38;
   return (
     <svg width={size} height={size} viewBox="0 0 38 38" fill="none">
-      <ellipse cx="19" cy="19" rx="14" ry="14" fill="#58a6ff" fillOpacity="0.07" />
-      <path d="M8 19.5L18 14l10 1.5-2 4-10 1L8 19.5z" fill="#58a6ff" fillOpacity="0.9" />
-      <path d="M14 19l-5 5 2 0.5 6-3.5" fill="#58a6ff" fillOpacity="0.6" />
-      <path d="M8 19.5l-2-3 3 1.5" fill="#58a6ff" fillOpacity="0.6" />
+      <ellipse cx="19" cy="19" rx="14" ry="14" fill="var(--av-accent)" fillOpacity="0.07" />
+      <path d="M8 19.5L18 14l10 1.5-2 4-10 1L8 19.5z" fill="var(--av-accent)" fillOpacity="0.9" />
+      <path d="M14 19l-5 5 2 0.5 6-3.5" fill="var(--av-accent)" fillOpacity="0.6" />
+      <path d="M8 19.5l-2-3 3 1.5" fill="var(--av-accent)" fillOpacity="0.6" />
       <circle cx="22" cy="17.5" r="1" fill="white" fillOpacity="0.5" />
     </svg>
   );
@@ -29,17 +30,17 @@ function PlaneSVG({ size = 38 }: { size?: number }) {
 function Cloud({ style }: { style: React.CSSProperties }) {
   return (
     <svg width="120" height="48" viewBox="0 0 120 48" fill="none" style={style} className="absolute">
-      <ellipse cx="60" cy="34" rx="52" ry="14" fill="#30363d" fillOpacity="0.7" />
-      <ellipse cx="40" cy="28" rx="28" ry="16" fill="#30363d" fillOpacity="0.7" />
-      <ellipse cx="72" cy="24" rx="24" ry="18" fill="#30363d" fillOpacity="0.7" />
-      <ellipse cx="52" cy="20" rx="20" ry="16" fill="#30363d" fillOpacity="0.7" />
+      <ellipse cx="60" cy="34" rx="52" ry="14" fill="var(--av-border)" fillOpacity="0.7" />
+      <ellipse cx="40" cy="28" rx="28" ry="16" fill="var(--av-border)" fillOpacity="0.7" />
+      <ellipse cx="72" cy="24" rx="24" ry="18" fill="var(--av-border)" fillOpacity="0.7" />
+      <ellipse cx="52" cy="20" rx="20" ry="16" fill="var(--av-border)" fillOpacity="0.7" />
     </svg>
   );
 }
 
 function FlightLoader({ message }: { message: string }) {
   return (
-    <div className="mt-8 rounded-xl border border-[#30363d] overflow-hidden" style={{ background: '#0d1117' }}>
+    <div className="mt-8 rounded-xl border border-[var(--av-border)] overflow-hidden" style={{ background: 'var(--av-bg)' }}>
       <div className="relative h-32 overflow-hidden">
 
         {/* Scrolling clouds — different speeds for parallax depth */}
@@ -57,7 +58,7 @@ function FlightLoader({ message }: { message: string }) {
             right: '46%',
             width: '28%',
             height: '2px',
-            background: 'linear-gradient(to left, #58a6ff30, transparent)',
+            background: 'linear-gradient(to left, var(--av-accent)30, transparent)',
           }}
         />
         <div
@@ -67,7 +68,7 @@ function FlightLoader({ message }: { message: string }) {
             width: '18%',
             height: '1px',
             marginTop: 3,
-            background: 'linear-gradient(to left, #58a6ff20, transparent)',
+            background: 'linear-gradient(to left, var(--av-accent)20, transparent)',
           }}
         />
 
@@ -76,17 +77,17 @@ function FlightLoader({ message }: { message: string }) {
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{ animation: 'planeBob 3s ease-in-out infinite', zIndex: 10 }}
         >
-          <span style={{ fontSize: 36, lineHeight: 1, display: 'block', color: '#58a6ff', filter: 'drop-shadow(0 0 10px rgba(0,212,255,0.6))' }}>✈</span>
+          <span style={{ fontSize: 36, lineHeight: 1, display: 'block', color: 'var(--av-accent)', filter: 'drop-shadow(0 0 10px rgba(0,212,255,0.6))' }}>✈</span>
         </div>
       </div>
 
       {/* Status row */}
-      <div className="border-t border-[#30363d] px-5 py-3 flex items-center gap-2.5">
+      <div className="border-t border-[var(--av-border)] px-5 py-3 flex items-center gap-2.5">
         <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#58a6ff] opacity-60" />
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#58a6ff]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--av-accent)] opacity-60" />
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--av-accent)]" />
         </span>
-        <span className="font-mono text-xs text-[#8b949e] tracking-wide">{message}</span>
+        <span className="font-mono text-xs text-[var(--av-text-dim)] tracking-wide">{message}</span>
       </div>
 
       <style>{`
@@ -189,7 +190,7 @@ export default function Home() {
   const isLoading = appState === 'streaming';
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#0d1117' }}>
+    <div className="min-h-screen relative" style={{ background: 'var(--av-bg)' }}>
       {/* Aurora background */}
       <div className="aurora">
         <div className="aurora-blob" />
@@ -197,17 +198,20 @@ export default function Home() {
         <div className="aurora-blob" />
         <div className="aurora-blob" />
       </div>
-      <header className="relative z-10 border-b border-[#30363d] px-6 py-4" style={{ backdropFilter: 'blur(12px)', background: 'rgba(7,13,26,0.7)' }}>
-        <div className="max-w-5xl mx-auto flex items-center gap-3">
-          <span className="text-[#58a6ff] text-xl">✈</span>
-          <span className="font-mono font-bold text-[#e6edf3] tracking-widest uppercase text-sm">FlySmart</span>
-          <span className="font-mono text-[#6e7681] text-xs">To infinity and beyond</span>
-          <img
-            src="https://media1.tenor.com/m/2HE21xaOZI8AAAAd/toy-story-woody.gif"
-            alt="Buzz and Woody flying"
-            className="h-7 w-auto rounded"
-            style={{ imageRendering: 'auto' }}
-          />
+      <header className="relative z-10 border-b px-6 py-4" style={{ backdropFilter: 'blur(12px)', background: 'var(--av-header)', borderColor: 'var(--av-border)' }}>
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-[var(--av-accent)] text-xl">✈</span>
+            <span className="font-mono font-bold text-[var(--av-text)] tracking-widest uppercase text-sm">FlySmart</span>
+            <span className="font-mono text-[var(--av-muted)] text-xs">To infinity and beyond</span>
+            <img
+              src="https://media1.tenor.com/m/2HE21xaOZI8AAAAd/toy-story-woody.gif"
+              alt="Buzz and Woody flying"
+              className="h-7 w-auto rounded"
+              style={{ imageRendering: 'auto' }}
+            />
+          </div>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -216,24 +220,24 @@ export default function Home() {
           <div className="mb-10 text-center">
             <h1 className="text-3xl font-bold mb-3 tracking-tight"
               style={{
-                background: 'linear-gradient(135deg, #00ffaa 0%, #58a6ff 40%, #a855f7 80%)',
+                background: 'linear-gradient(135deg, #00ffaa 0%, var(--av-accent) 40%, #a855f7 80%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}>
               Find Your Best Award Flight
             </h1>
-            <p className="text-[#8b949e] max-w-xl mx-auto text-sm leading-relaxed">
+            <p className="text-[var(--av-text-dim)] max-w-xl mx-auto text-sm leading-relaxed">
               Enter your route and points balances. Our AI travel expert will search for flights, evaluate every
               redemption option, and tell you exactly how to book the best deal.
             </p>
           </div>
         )}
 
-        <div className="rounded-xl border p-6" style={{ background: '#161b22', borderColor: '#30363d' }}>
+        <div className="rounded-xl border p-6" style={{ background: 'var(--av-surface)', borderColor: 'var(--av-border)' }}>
           {appState !== 'idle' && (
             <div className="flex items-center gap-2 mb-5">
-              <span className="font-mono text-xs text-[#6e7681] uppercase tracking-widest">New Search</span>
+              <span className="font-mono text-xs text-[var(--av-muted)] uppercase tracking-widest">New Search</span>
             </div>
           )}
           <SearchForm onSearch={handleSearch} loading={isLoading} />

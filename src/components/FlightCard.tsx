@@ -63,10 +63,10 @@ function formatDate(iso: string) {
 
 function cabinBadgeColor(cabin: string) {
   switch (cabin) {
-    case 'FIRST':           return '#d29922';
-    case 'BUSINESS':        return '#58a6ff';
+    case 'FIRST':           return 'var(--av-gold)';
+    case 'BUSINESS':        return 'var(--av-accent)';
     case 'PREMIUM_ECONOMY': return '#a78bfa';
-    default:                return '#6e7681';
+    default:                return 'var(--av-muted)';
   }
 }
 
@@ -94,12 +94,12 @@ export default function FlightCard({ flight }: Props) {
 
   return (
     <div
-      className="rounded-lg border p-4 transition-all duration-200 hover:border-[#58a6ff]/40"
-      style={{ background: '#161b22', borderColor: '#30363d' }}
+      className="rounded-lg border p-4 transition-all duration-200 hover:border-[var(--av-accent)]/40"
+      style={{ background: 'var(--av-surface)', borderColor: 'var(--av-border)' }}
     >
       {/* Header: program badge + cabin */}
       <div className="flex items-center justify-between mb-3">
-        <span className="font-mono text-xs px-2 py-0.5 rounded bg-[#0a1526] text-[#8b949e] border border-[#30363d]">
+        <span className="font-mono text-xs px-2 py-0.5 rounded bg-[#0a1526] text-[var(--av-text-dim)] border border-[var(--av-border)]">
           {programLabel(flight.source ?? '')}
         </span>
         <span
@@ -113,16 +113,16 @@ export default function FlightCard({ flight }: Props) {
       {/* Route */}
       <div className="flex items-center gap-3 mb-3">
         <div className="text-center">
-          <div className="font-mono text-xl font-bold text-[#e6edf3]">{origin}</div>
-          <div className="font-mono text-xs text-[#6e7681]">{formatDate(flight.departure)}</div>
+          <div className="font-mono text-xl font-bold text-[var(--av-text)]">{origin}</div>
+          <div className="font-mono text-xs text-[var(--av-muted)]">{formatDate(flight.departure)}</div>
         </div>
         <div className="flex-1 flex flex-col items-center gap-1">
           <div className="w-full flex items-center gap-1">
-            <div className="flex-1 h-px bg-[#30363d]" />
-            <span className="text-[#58a6ff] text-xs">✈</span>
-            <div className="flex-1 h-px bg-[#30363d]" />
+            <div className="flex-1 h-px bg-[var(--av-border)]" />
+            <span className="text-[var(--av-accent)] text-xs">✈</span>
+            <div className="flex-1 h-px bg-[var(--av-border)]" />
           </div>
-          <div className="font-mono text-xs text-[#6e7681] text-center">
+          <div className="font-mono text-xs text-[var(--av-muted)] text-center">
             {flight.stops === 0
               ? 'Nonstop'
               : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
@@ -130,11 +130,11 @@ export default function FlightCard({ flight }: Props) {
               <div className="mt-1 flex flex-col items-center gap-0.5">
                 {airlineCodes.map((code, i) => (
                   <div key={code} className="flex flex-col items-center">
-                    <span className="text-[10px] text-[#8b949e]">
+                    <span className="text-[10px] text-[var(--av-text-dim)]">
                       {code} · {AIRLINE_NAMES[code] ?? 'Unknown'}
                     </span>
                     {i < airlineCodes.length - 1 && (
-                      <span className="text-[9px] text-[#30363d]">↓</span>
+                      <span className="text-[9px] text-[var(--av-border)]">↓</span>
                     )}
                   </div>
                 ))}
@@ -143,8 +143,8 @@ export default function FlightCard({ flight }: Props) {
           </div>
         </div>
         <div className="text-center">
-          <div className="font-mono text-xl font-bold text-[#e6edf3]">{dest}</div>
-          <div className="font-mono text-xs text-[#6e7681]">{formatDate(flight.arrival)}</div>
+          <div className="font-mono text-xl font-bold text-[var(--av-text)]">{dest}</div>
+          <div className="font-mono text-xs text-[var(--av-muted)]">{formatDate(flight.arrival)}</div>
         </div>
       </div>
 
@@ -159,7 +159,7 @@ export default function FlightCard({ flight }: Props) {
                 className="w-4 h-4 rounded-sm flex-shrink-0"
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
-              <span className="font-mono text-xs text-[#8b949e]">
+              <span className="font-mono text-xs text-[var(--av-text-dim)]">
                 {code} · {AIRLINE_NAMES[code] ?? 'Unknown Airline'}
               </span>
             </div>
@@ -168,18 +168,18 @@ export default function FlightCard({ flight }: Props) {
       )}
 
       {/* Footer: cost + seats + book button */}
-      <div className="flex items-center justify-between pt-3 border-t border-[#30363d]">
+      <div className="flex items-center justify-between pt-3 border-t border-[var(--av-border)]">
         <div>
-          <span className="font-mono text-lg font-bold text-[#d29922]">
+          <span className="font-mono text-lg font-bold text-[var(--av-gold)]">
             {(flight.mileageCost ?? flight.price).toLocaleString()} mi
           </span>
           {flight.taxes != null && flight.taxes > 0 && (
-            <span className="font-mono text-xs text-[#6e7681] ml-2">
+            <span className="font-mono text-xs text-[var(--av-muted)] ml-2">
               +${(flight.taxes / 100).toFixed(2)} taxes
             </span>
           )}
           {flight.remainingSeats != null && flight.remainingSeats > 0 && (
-            <div className="font-mono text-xs text-[#6e7681] mt-0.5">
+            <div className="font-mono text-xs text-[var(--av-muted)] mt-0.5">
               {flight.remainingSeats} seat{flight.remainingSeats !== 1 ? 's' : ''} left
             </div>
           )}
@@ -192,17 +192,17 @@ export default function FlightCard({ flight }: Props) {
             rel="noopener noreferrer"
             className="font-mono text-xs px-3 py-1.5 rounded border transition-colors"
             style={{
-              color: '#58a6ff',
-              borderColor: '#58a6ff40',
-              background: '#58a6ff10',
+              color: 'var(--av-accent)',
+              borderColor: 'var(--av-accent)40',
+              background: 'var(--av-accent)10',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = '#58a6ff20';
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = '#58a6ff80';
+              (e.currentTarget as HTMLAnchorElement).style.background = 'var(--av-accent)20';
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--av-accent)80';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = '#58a6ff10';
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = '#58a6ff40';
+              (e.currentTarget as HTMLAnchorElement).style.background = 'var(--av-accent)10';
+              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--av-accent)40';
             }}
           >
             Book Award →
