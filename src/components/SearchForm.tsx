@@ -35,9 +35,9 @@ export default function SearchForm({ onSearch, loading }: Props) {
   }
 
 const inputClass =
-    'w-full bg-[#0a1526] border border-[#1a2d4a] rounded-lg px-4 py-3 text-[#e2eaf5] placeholder-[#4a6280] focus:outline-none focus:border-[#00d4ff] focus:ring-1 focus:ring-[#00d4ff]/30 hover:border-[#00d4ff]/50 hover:bg-[#0d1e35] transition-colors font-mono text-sm uppercase tracking-widest';
+    'w-full bg-[#0a1526] border border-[#30363d] rounded-lg px-4 py-3 text-[#e6edf3] placeholder-[#6e7681] focus:outline-none focus:border-[#58a6ff] focus:ring-1 focus:ring-[#58a6ff]/30 hover:border-[#58a6ff]/50 hover:bg-[#0d1e35] transition-colors font-mono text-sm uppercase tracking-widest';
 
-  const labelClass = 'block text-xs text-[#7a9ab8] uppercase tracking-widest mb-1.5 font-mono';
+  const labelClass = 'block text-xs text-[#8b949e] uppercase tracking-widest mb-1.5 font-mono';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
@@ -109,8 +109,8 @@ const inputClass =
         style={{
           background: loading
             ? '#0a1526'
-            : 'linear-gradient(135deg, #00d4ff 0%, #0099bb 100%)',
-          color: loading ? '#4a6280' : '#070d1a',
+            : 'linear-gradient(135deg, #58a6ff 0%, #0099bb 100%)',
+          color: loading ? '#6e7681' : '#0d1117',
           boxShadow: loading ? 'none' : '0 0 20px rgba(0, 212, 255, 0.25)',
           transition: 'box-shadow 0.2s, filter 0.2s',
         }}

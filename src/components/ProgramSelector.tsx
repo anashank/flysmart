@@ -46,7 +46,7 @@ function Group({ title, currencies, selected, onToggle }: {
 }) {
   return (
     <div>
-      <p className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-[#4a6280]">{title}</p>
+      <p className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-[#6e7681]">{title}</p>
       {currencies.map((c) => {
         const isSelected = selected.has(c);
         return (
@@ -55,13 +55,13 @@ function Group({ title, currencies, selected, onToggle }: {
             type="button"
             onClick={() => onToggle(c)}
             className="w-full flex items-center gap-3 px-3 py-2 transition-colors text-left"
-            style={{ background: isSelected ? '#1a2d4a' : 'transparent' }}
+            style={{ background: isSelected ? '#30363d' : 'transparent' }}
             onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = '#0d1e35'; }}
             onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
           >
             <ProgramBadge currency={c} size={26} />
-            <span className="text-sm text-[#e2eaf5] flex-1">{CURRENCY_LABELS[c]}</span>
-            {isSelected && <span className="text-[#00d4ff] text-xs">✓</span>}
+            <span className="text-sm text-[#e6edf3] flex-1">{CURRENCY_LABELS[c]}</span>
+            {isSelected && <span className="text-[#58a6ff] text-xs">✓</span>}
           </button>
         );
       })}
@@ -141,16 +141,16 @@ export default function ProgramSelector({ values, onChange }: Props) {
   }
 
   const selectedList = Array.from(selected);
-  const labelClass = 'block text-xs text-[#7a9ab8] uppercase tracking-widest mb-1.5 font-mono';
+  const labelClass = 'block text-xs text-[#8b949e] uppercase tracking-widest mb-1.5 font-mono';
 
   const dropdown = open ? createPortal(
     <div
       ref={dropdownRef}
-      className="rounded-lg border border-[#1a2d4a] overflow-y-auto shadow-2xl"
+      className="rounded-lg border border-[#30363d] overflow-y-auto shadow-2xl"
       style={{ ...dropdownStyle, background: '#0d1e35' }}
     >
       <Group title="Credit Cards"   currencies={CARDS}    selected={selected} onToggle={toggle} />
-      <div className="border-t border-[#1a2d4a] my-1" />
+      <div className="border-t border-[#30363d] my-1" />
       <Group title="Frequent Flyer" currencies={AIRLINES} selected={selected} onToggle={toggle} />
     </div>,
     document.body
@@ -166,23 +166,23 @@ export default function ProgramSelector({ values, onChange }: Props) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left"
-        style={{ background: '#0a1526', borderColor: open ? '#00d4ff' : '#1a2d4a' }}
+        style={{ background: '#0a1526', borderColor: open ? '#58a6ff' : '#30363d' }}
       >
         <span className="flex items-center gap-2 flex-wrap min-w-0">
           {selectedList.length === 0 ? (
-            <span className="text-sm text-[#4a6280] font-mono">Select programs...</span>
+            <span className="text-sm text-[#6e7681] font-mono">Select programs...</span>
           ) : (
             <>
               {selectedList.slice(0, 6).map((c) => (
                 <ProgramBadge key={c} currency={c} size={22} />
               ))}
               {selectedList.length > 6 && (
-                <span className="text-xs text-[#4a6280] font-mono">+{selectedList.length - 6}</span>
+                <span className="text-xs text-[#6e7681] font-mono">+{selectedList.length - 6}</span>
               )}
             </>
           )}
         </span>
-        <span className="text-[#4a6280] ml-2 text-xs flex-shrink-0">{open ? '▲' : '▼'}</span>
+        <span className="text-[#6e7681] ml-2 text-xs flex-shrink-0">{open ? '▲' : '▼'}</span>
       </button>
 
       {dropdown}
@@ -193,15 +193,15 @@ export default function ProgramSelector({ values, onChange }: Props) {
           {selectedList.map((c) => (
             <div
               key={c}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 border transition-colors hover:border-[#00d4ff]/50"
-              style={{ background: '#0a1526', borderColor: '#1a2d4a' }}
+              className="flex items-center gap-2 rounded-lg px-3 py-2 border transition-colors hover:border-[#58a6ff]/50"
+              style={{ background: '#0a1526', borderColor: '#30363d' }}
             >
               <ProgramBadge currency={c} size={22} />
               <input
                 type="text"
                 inputMode="numeric"
                 placeholder="0"
-                className="flex-1 bg-transparent text-[#e2eaf5] placeholder-[#4a6280] focus:outline-none font-mono text-sm min-w-0"
+                className="flex-1 bg-transparent text-[#e6edf3] placeholder-[#6e7681] focus:outline-none font-mono text-sm min-w-0"
                 value={values[c]?.toLocaleString() ?? ''}
                 onChange={(e) => setBalance(c, e.target.value)}
               />

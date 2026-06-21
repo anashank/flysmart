@@ -132,9 +132,20 @@ export class SeatsAeroAdapter implements FlightAdapter {
       throw new Error('Seats.aero rate limit reached. Please wait a few minutes and try again.');
     }
 
-    return results
+    const all = results
       .filter((r): r is PromiseFulfilledResult<FlightOffer[]> => r.status === 'fulfilled')
       .flatMap((r) => r.value);
+
+    // Deduplicate: same airline + source program → keep cheapest
+    const seen = new Map<string, FlightOffer>();
+    for (const flight of all) {
+      const key = `${flight.airline}|${flight.source}|${flight.cabin}`;
+      const existing = seen.get(key);
+      if (!existing || flight.mileageCost! < existing.mileageCost!) {
+        seen.set(key, flight);
+      }
+    }
+    return Array.from(seen.values());
   }
 
   async confirmPrice(offer: FlightOffer): Promise<FlightOffer> {

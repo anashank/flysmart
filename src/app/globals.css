@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-av-bg: #070d1a;
-  --color-av-surface: #0f1829;
-  --color-av-border: #1a2d4a;
-  --color-av-blue: #00d4ff;
-  --color-av-blue-dim: #0099bb;
-  --color-av-amber: #f59e0b;
-  --color-av-green: #22c55e;
-  --color-av-muted: #4a6280;
-  --color-av-text: #e2eaf5;
-  --color-av-text-dim: #7a9ab8;
+  --color-av-bg: #0d1117;
+  --color-av-surface: #161b22;
+  --color-av-border: #30363d;
+  --color-av-blue: #58a6ff;
+  --color-av-blue-dim: #388bfd;
+  --color-av-amber: #d29922;
+  --color-av-green: #3fb950;
+  --color-av-muted: #6e7681;
+  --color-av-text: #e6edf3;
+  --color-av-text-dim: #8b949e;
 
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
@@ -37,27 +37,27 @@
 }
 .aurora-blob:nth-child(1) {
   width: 600px; height: 400px;
-  background: radial-gradient(ellipse, #00ffaa, transparent 70%);
+  background: radial-gradient(ellipse, #388bfd, transparent 70%);
   top: -10%; left: -10%;
   animation-delay: 0s;
 }
 .aurora-blob:nth-child(2) {
   width: 500px; height: 500px;
-  background: radial-gradient(ellipse, #7c3aed, transparent 70%);
+  background: radial-gradient(ellipse, #6e40c9, transparent 70%);
   top: 20%; right: -15%;
   animation-delay: -6s;
 }
 .aurora-blob:nth-child(3) {
   width: 700px; height: 350px;
-  background: radial-gradient(ellipse, #0ea5e9, transparent 70%);
+  background: radial-gradient(ellipse, #1f6feb, transparent 70%);
   bottom: 10%; left: 20%;
   animation-delay: -12s;
 }
 .aurora-blob:nth-child(4) {
   width: 400px; height: 400px;
-  background: radial-gradient(ellipse, #ec4899, transparent 70%);
+  background: radial-gradient(ellipse, #8957e5, transparent 70%);
   top: 50%; right: 30%;
-  opacity: 0.1;
+  opacity: 0.08;
   animation-delay: -4s;
 }
 
