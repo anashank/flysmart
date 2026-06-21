@@ -19,6 +19,8 @@ const AIRLINE_NAMES: Record<string, string> = {
   ET: 'Ethiopian',         SA: 'South African',     UX: 'Air Europa',
   IB: 'Iberia',            VY: 'Vueling',           EI: 'Aer Lingus',
   SK: 'SAS',               AY: 'Finnair',           TP: 'TAP Air Portugal',
+  LO: 'LOT Polish Airlines', A3: 'Aegean Airlines',
+  WY: 'Oman Air',          RJ: 'Royal Jordanian',   GF: 'Gulf Air',
 };
 
 // Program source → booking URL (pre-filled where possible)
@@ -211,6 +213,7 @@ function airlineDomain(code: string): string {
     AV: 'avianca.com', WN: 'southwest.com', B6: 'jetblue.com', AS: 'alaskaair.com',
     QR: 'qatarairways.com', CX: 'cathaypacific.com', JL: 'jal.com', IB: 'iberia.com',
     AI: 'airindia.in', AY: 'finnair.com', SK: 'flysas.com', TP: 'flytap.com', EI: 'aerlingus.com',
+    LO: 'lot.com', A3: 'aegeanair.com', WY: 'omanair.com', RJ: 'rj.com', GF: 'gulfair.com',
   };
   return domains[code] ?? 'google.com';
 }
