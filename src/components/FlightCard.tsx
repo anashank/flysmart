@@ -23,12 +23,21 @@ const AIRLINE_NAMES: Record<string, string> = {
   WY: 'Oman Air',          RJ: 'Royal Jordanian',   GF: 'Gulf Air',
 };
 
+const AEROPLAN_CABIN: Record<string, string> = {
+  ECONOMY: 'eco', PREMIUM_ECONOMY: 'eco', BUSINESS: 'biz', FIRST: 'first',
+};
+const UNITED_CABIN: Record<string, string> = {
+  ECONOMY: '3', PREMIUM_ECONOMY: '4', BUSINESS: '7', FIRST: '1',
+};
+
 // Program source → booking URL (pre-filled where possible)
-function bookingUrl(source: string, origin: string, destination: string, date: string): string {
+function bookingUrl(source: string, origin: string, destination: string, date: string, cabin: string): string {
   const d = date.split('T')[0] ?? '';
+  const ac = AEROPLAN_CABIN[cabin] ?? 'biz';
+  const uc = UNITED_CABIN[cabin] ?? '7';
   const urls: Record<string, string> = {
-    aeroplan:       `https://www.aircanada.com/aeroplan/redeem/availability/outbound?org0=${origin}&dest0=${destination}&departureDate0=${d}&ADT=1&lang=en-CA&tripType=O`,
-    united:         `https://www.united.com/en/us/flight-search/book-a-flight/results/rev?f=${origin}&t=${destination}&d=${d}&tt=1&at=1&sc=7&px=1&taxng=1&idx=1`,
+    aeroplan:       `https://www.aircanada.com/aeroplan/redeem/availability/outbound?org0=${origin}&dest0=${destination}&departureDate0=${d}&ADT=1&lang=en-CA&tripType=O&cabin=${ac}`,
+    united:         `https://www.united.com/en/us/flight-search/book-a-flight/results/rev?f=${origin}&t=${destination}&d=${d}&tt=1&at=1&sc=${uc}&px=1&taxng=1&idx=1`,
     delta:          `https://www.delta.com/us/en/flight-search/book-a-flight`,
     american:       `https://www.aa.com/booking/find-flights`,
     british:        `https://www.britishairways.com/en-us/executive-club/spending-avios/use-avios-for-flights`,
@@ -81,7 +90,7 @@ export default function FlightCard({ flight }: Props) {
     ? flight.airline.split(',').map(s => s.trim()).filter(Boolean)
     : [];
 
-  const url = bookingUrl(flight.source ?? '', origin, dest, flight.departure);
+  const url = bookingUrl(flight.source ?? '', origin, dest, flight.departure, flight.cabin);
 
   return (
     <div
