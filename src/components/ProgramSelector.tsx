@@ -56,7 +56,7 @@ function Group({ title, currencies, selected, onToggle }: {
             onClick={() => onToggle(c)}
             className="w-full flex items-center gap-3 px-3 py-2 transition-colors text-left"
             style={{ background: isSelected ? 'var(--av-border)' : 'transparent' }}
-            onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = '#0d1e35'; }}
+            onMouseEnter={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = 'var(--av-input-hover)'; }}
             onMouseLeave={(e) => { if (!isSelected) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
           >
             <ProgramBadge currency={c} size={26} />
@@ -147,7 +147,7 @@ export default function ProgramSelector({ values, onChange }: Props) {
     <div
       ref={dropdownRef}
       className="rounded-lg border border-[var(--av-border)] overflow-y-auto shadow-2xl"
-      style={{ ...dropdownStyle, background: '#0d1e35' }}
+      style={{ ...dropdownStyle, background: 'var(--av-dropdown)' }}
     >
       <Group title="Credit Cards"   currencies={CARDS}    selected={selected} onToggle={toggle} />
       <div className="border-t border-[var(--av-border)] my-1" />
@@ -166,7 +166,7 @@ export default function ProgramSelector({ values, onChange }: Props) {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-colors text-left"
-        style={{ background: '#0a1526', borderColor: open ? 'var(--av-accent)' : 'var(--av-border)' }}
+        style={{ background: 'var(--av-input)', borderColor: open ? 'var(--av-accent)' : 'var(--av-border)' }}
       >
         <span className="flex items-center gap-2 flex-wrap min-w-0">
           {selectedList.length === 0 ? (
@@ -194,7 +194,7 @@ export default function ProgramSelector({ values, onChange }: Props) {
             <div
               key={c}
               className="flex items-center gap-2 rounded-lg px-3 py-2 border transition-colors hover:border-[var(--av-accent)]/50"
-              style={{ background: '#0a1526', borderColor: 'var(--av-border)' }}
+              style={{ background: 'var(--av-input)', borderColor: 'var(--av-border)' }}
             >
               <ProgramBadge currency={c} size={22} />
               <input

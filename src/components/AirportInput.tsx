@@ -70,7 +70,7 @@ export default function AirportInput({ label, value, onChange, placeholder = 'JF
       <label className={labelClass}>{label}</label>
       <input
         ref={inputRef}
-        className="w-full bg-[#0a1526] border border-[#1a2d4a] rounded-lg px-4 py-3 text-[#e2eaf5] placeholder-[#4a6280] focus:outline-none focus:border-[#00d4ff] focus:ring-1 focus:ring-[#00d4ff]/30 hover:border-[#00d4ff]/50 hover:bg-[#0d1e35] transition-colors font-mono text-sm tracking-wider"
+        className="w-full bg-[var(--av-input)] border border-[var(--av-border)] rounded-lg px-4 py-3 text-[#e2eaf5] placeholder-[#4a6280] focus:outline-none focus:border-[var(--av-accent)] focus:ring-1 focus:ring-[var(--av-accent)]/30 hover:border-[var(--av-accent)]/50 hover:bg-[var(--av-input-hover)] transition-colors font-mono text-sm tracking-wider"
         placeholder={placeholder}
         value={query}
         onChange={handleInput}
@@ -82,8 +82,8 @@ export default function AirportInput({ label, value, onChange, placeholder = 'JF
 
       {open && (
         <div
-          className="absolute z-50 w-full mt-1 rounded-lg border border-[#1a2d4a] overflow-hidden shadow-xl"
-          style={{ background: '#0d1e35' }}
+          className="absolute z-50 w-full mt-1 rounded-lg border border-[var(--av-border)] overflow-hidden shadow-xl"
+          style={{ background: 'var(--av-input-hover)' }}
         >
           {results.map((airport, i) => (
             <button
@@ -92,11 +92,11 @@ export default function AirportInput({ label, value, onChange, placeholder = 'JF
               onMouseDown={() => select(airport)}
               onMouseEnter={() => setHighlighted(i)}
               className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors"
-              style={{ background: i === highlighted ? '#1a2d4a' : 'transparent' }}
+              style={{ background: i === highlighted ? 'var(--av-border)' : 'transparent' }}
             >
               <span
                 className="font-mono text-sm font-bold flex-shrink-0 w-10"
-                style={{ color: '#00d4ff' }}
+                style={{ color: 'var(--av-accent)' }}
               >
                 {airport.code}
               </span>

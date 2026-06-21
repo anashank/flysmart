@@ -53,7 +53,7 @@ export default function WatchButton({ origin, destination, date, cabin }: Props)
             placeholder="your@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 bg-[#0a1526] border border-[var(--av-border)] rounded-lg px-3 py-2 text-sm text-[var(--av-text)] placeholder-[var(--av-muted)] focus:outline-none focus:border-[var(--av-accent)] font-mono"
+            className="flex-1 bg-[var(--av-input)] border border-[var(--av-border)] rounded-lg px-3 py-2 text-sm text-[var(--av-text)] placeholder-[var(--av-muted)] focus:outline-none focus:border-[var(--av-accent)] font-mono"
           />
           <button
             onClick={handleWatch}

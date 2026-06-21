@@ -16,17 +16,17 @@ interface Results {
 
 function FlightLoader({ message }: { message: string }) {
   return (
-    <div className="mt-8 rounded-xl border border-[#1a2d4a] overflow-hidden" style={{ background: '#070d1a' }}>
+    <div className="mt-8 rounded-xl border border-[var(--av-border)] overflow-hidden" style={{ background: 'var(--av-bg)' }}>
       <div className="relative h-32 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{ animation: 'planeBob 3s ease-in-out infinite', zIndex: 10 }}>
-          <span style={{ fontSize: 36, lineHeight: 1, display: 'block', color: '#00d4ff', filter: 'drop-shadow(0 0 10px rgba(0,212,255,0.6))' }}>✈</span>
+          <span style={{ fontSize: 36, lineHeight: 1, display: 'block', color: 'var(--av-accent)', filter: 'drop-shadow(0 0 10px rgba(var(--av-accent),0.6))' }}>✈</span>
         </div>
       </div>
-      <div className="border-t border-[#1a2d4a] px-5 py-3 flex items-center gap-2.5">
+      <div className="border-t border-[var(--av-border)] px-5 py-3 flex items-center gap-2.5">
         <span className="relative flex h-1.5 w-1.5 flex-shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00d4ff] opacity-60" />
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#00d4ff]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--av-accent)] opacity-60" />
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--av-accent)]" />
         </span>
         <span className="font-mono text-xs text-[#7a9ab8] tracking-wide">{message}</span>
       </div>
@@ -124,7 +124,7 @@ export default function DemoPage() {
   const isLoading = appState === 'streaming';
 
   return (
-    <div className="min-h-screen relative" style={{ background: '#070d1a' }}>
+    <div className="min-h-screen relative" style={{ background: 'var(--av-bg)' }}>
       <div className="aurora">
         <div className="aurora-blob" />
         <div className="aurora-blob" />
@@ -158,7 +158,7 @@ export default function DemoPage() {
           <div className="mb-10 text-center">
             <h1 className="text-3xl font-bold mb-3 tracking-tight"
               style={{
-                background: 'linear-gradient(135deg, #00ffaa 0%, #00d4ff 40%, #a855f7 80%)',
+                background: 'linear-gradient(135deg, #00ffaa 0%, var(--av-accent) 40%, #a855f7 80%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -175,7 +175,7 @@ export default function DemoPage() {
           </div>
         )}
 
-        <div className="rounded-xl border p-6" style={{ background: '#0f1829', borderColor: '#1a2d4a' }}>
+        <div className="rounded-xl border p-6" style={{ background: 'var(--av-surface)', borderColor: 'var(--av-border)' }}>
           {appState !== 'idle' && (
             <div className="flex items-center gap-2 mb-5">
               <span className="font-mono text-xs text-[#4a6280] uppercase tracking-widest">New Search</span>

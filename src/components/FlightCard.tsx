@@ -99,7 +99,7 @@ export default function FlightCard({ flight }: Props) {
     >
       {/* Header: program badge + cabin */}
       <div className="flex items-center justify-between mb-3">
-        <span className="font-mono text-xs px-2 py-0.5 rounded bg-[#0a1526] text-[var(--av-text-dim)] border border-[var(--av-border)]">
+        <span className="font-mono text-xs px-2 py-0.5 rounded bg-[var(--av-input)] text-[var(--av-text-dim)] border border-[var(--av-border)]">
           {programLabel(flight.source ?? '')}
         </span>
         <span

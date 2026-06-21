@@ -35,7 +35,7 @@ export default function SearchForm({ onSearch, loading }: Props) {
   }
 
 const inputClass =
-    'w-full bg-[#0a1526] border border-[var(--av-border)] rounded-lg px-4 py-3 text-[var(--av-text)] placeholder-[var(--av-muted)] focus:outline-none focus:border-[var(--av-accent)] focus:ring-1 focus:ring-[var(--av-accent)]/30 hover:border-[var(--av-accent)]/50 hover:bg-[#0d1e35] transition-colors font-mono text-sm uppercase tracking-widest';
+    'w-full bg-[var(--av-input)] border border-[var(--av-border)] rounded-lg px-4 py-3 text-[var(--av-text)] placeholder-[var(--av-muted)] focus:outline-none focus:border-[var(--av-accent)] focus:ring-1 focus:ring-[var(--av-accent)]/30 hover:border-[var(--av-accent)]/50 hover:bg-[var(--av-input-hover)] transition-colors font-mono text-sm uppercase tracking-widest';
 
   const labelClass = 'block text-xs text-[var(--av-text-dim)] uppercase tracking-widest mb-1.5 font-mono';
 
@@ -108,20 +108,20 @@ const inputClass =
         className="w-full py-4 rounded-lg font-mono text-sm uppercase tracking-widest font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         style={{
           background: loading
-            ? '#0a1526'
+            ? 'var(--av-input)'
             : 'linear-gradient(135deg, var(--av-accent) 0%, #0099bb 100%)',
           color: loading ? 'var(--av-muted)' : 'var(--av-bg)',
-          boxShadow: loading ? 'none' : '0 0 20px rgba(0, 212, 255, 0.25)',
+          boxShadow: loading ? 'none' : '0 0 20px var(--av-glow)',
           transition: 'box-shadow 0.2s, filter 0.2s',
         }}
         onMouseEnter={(e) => {
           if (!loading) {
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 40px rgba(0, 212, 255, 0.8), 0 0 80px rgba(0, 212, 255, 0.4)';
+            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 40px var(--av-glow)';
             (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.2)';
           }
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.25)';
+          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px var(--av-glow)';
           (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1)';
         }}
       >
