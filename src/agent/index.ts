@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { MessageParam, ContentBlock } from '@anthropic-ai/sdk/resources/messages';
 import { TOOLS, handleToolCall } from './tools';
+import { getSeatsAeroRateLimit } from '@/adapters/seats-aero';
 import type { FlightOffer, FlightAdapter } from '@/adapters/types';
 import type { PointsCurrency } from '@/data/programs';
 
@@ -55,7 +56,8 @@ export type AgentEvent =
   | { type: 'status'; message: string }
   | { type: 'token'; text: string }
   | { type: 'flights'; flights: FlightOffer[] }
-  | { type: 'done'; recommendation: string };
+  | { type: 'done'; recommendation: string }
+  | { type: 'rateLimit'; limit: number; remaining: number };
 
 const TOOL_STATUS: Record<string, string> = {
   search_flights:          'Searching award availability...',
@@ -132,6 +134,9 @@ Please always call search_flights first to find available award space, then give
           content: typeof result === 'string' ? result : JSON.stringify(result),
         });
       }
+
+      const rateLimit = getSeatsAeroRateLimit();
+      if (rateLimit) onEvent({ type: 'rateLimit', limit: rateLimit.limit, remaining: rateLimit.remaining });
 
       messages.push({ role: 'user', content: toolResults });
       continue;

@@ -2,6 +2,29 @@ import type { FlightAdapter, FlightOffer, FlightSegment, SearchParams, CabinClas
 
 const BASE_URL = 'https://seats.aero/partnerapi';
 
+export interface RateLimitStatus {
+  limit: number;
+  remaining: number;
+  resetSeconds: number;
+}
+
+let lastRateLimit: RateLimitStatus | null = null;
+
+function captureRateLimit(res: Response): void {
+  const limit = res.headers.get('x-ratelimit-limit');
+  const remaining = res.headers.get('x-ratelimit-remaining');
+  const reset = res.headers.get('x-ratelimit-reset');
+  if (limit && remaining) {
+    lastRateLimit = { limit: +limit, remaining: +remaining, resetSeconds: reset ? +reset : 0 };
+  }
+}
+
+// Best-effort snapshot of the most recent Seats.aero rate-limit headers seen —
+// useful for surfacing "calls remaining today" in the UI while testing.
+export function getSeatsAeroRateLimit(): RateLimitStatus | null {
+  return lastRateLimit;
+}
+
 // Seats.aero cabin codes
 const CABIN_KEY: Record<CabinClass, string> = {
   ECONOMY: 'Y',
@@ -105,6 +128,7 @@ async function fetchTripDetails(id: string, apiKey: string): Promise<Trip[]> {
   const res = await fetch(`${BASE_URL}/trips/${id}`, {
     headers: { 'Partner-Authorization': apiKey },
   });
+  captureRateLimit(res);
   if (!res.ok) return [];
   const json = await res.json();
   return (json.data ?? []) as Trip[];
@@ -169,6 +193,7 @@ export class SeatsAeroAdapter implements FlightAdapter {
     const res = await fetch(`${BASE_URL}/availability?${query}`, {
       headers: { 'Partner-Authorization': this.apiKey },
     });
+    captureRateLimit(res);
 
     if (res.status === 429) throw new Error('RATE_LIMITED');
     if (!res.ok) return [];

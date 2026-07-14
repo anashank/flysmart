@@ -110,6 +110,7 @@ export default function Home() {
   const [results, setResults] = useState<Results | null>(null);
   const [streamingRec, setStreamingRec] = useState('');
   const [error, setError] = useState('');
+  const [rateLimit, setRateLimit] = useState<{ limit: number; remaining: number } | null>(null);
 
   async function handleSearch(values: SearchFormValues) {
     setAppState('streaming');
@@ -176,6 +177,8 @@ export default function Home() {
           } else if (event.type === 'done') {
             setResults({ flights: accFlights, recommendation: event.recommendation, searchParams: values });
             setAppState('results');
+          } else if (event.type === 'rateLimit') {
+            setRateLimit({ limit: event.limit, remaining: event.remaining });
           } else if (event.type === 'error') {
             throw new Error(event.message);
           }
@@ -211,7 +214,18 @@ export default function Home() {
               style={{ imageRendering: 'auto' }}
             />
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            {rateLimit && (
+              <span
+                className="font-mono text-xs px-2 py-1 rounded border text-[var(--av-muted)]"
+                style={{ borderColor: 'var(--av-border)' }}
+                title="Seats.aero API calls remaining today"
+              >
+                seats.aero: {rateLimit.remaining}/{rateLimit.limit}
+              </span>
+            )}
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
