@@ -202,7 +202,12 @@ export class SeatsAeroAdapter implements FlightAdapter {
     const data: SeatsAeroAvailability[] = json.data ?? [];
 
     return data
-      .filter((r) => getCabinFields(r, params.cabin).available)
+      // JAvailable/etc can be true with 0 remaining seats — a stale/cached record
+      // that isn't actually bookable, so exclude it rather than surface a dead end.
+      .filter((r) => {
+        const fields = getCabinFields(r, params.cabin);
+        return fields.available && fields.remainingSeats > 0;
+      })
       .map((r) => mapAvailability(r, params.cabin));
   }
 
