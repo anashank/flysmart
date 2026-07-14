@@ -35,6 +35,8 @@ export interface FlightOffer {
   source?: string;          // mileage program (e.g. "aeroplan", "united")
   available?: boolean;      // whether award space is confirmed open
   remainingSeats?: number;
+  connections?: string[];   // IATA codes of connecting airports, in order
+  aircraft?: string[];      // aircraft type per segment (e.g. "Airbus A330-300")
   rawData: unknown;
 }
 

@@ -133,6 +133,8 @@ export default function FlightCard({ flight }: Props) {
           <div className="font-mono text-xs text-[var(--av-muted)] text-center">
             {flight.stops === 0
               ? 'Nonstop'
+              : flight.connections && flight.connections.length > 0
+              ? `${flight.stops} stop${flight.stops > 1 ? 's' : ''} via ${flight.connections.join(', ')}`
               : `${flight.stops} stop${flight.stops > 1 ? 's' : ''} · operated by ${airlineCodes
                   .map((code) => AIRLINE_NAMES[code] ?? code)
                   .join(' → ')}`}
@@ -160,6 +162,16 @@ export default function FlightCard({ flight }: Props) {
               </span>
             </div>
           ))}
+          {flight.flightNumber && (
+            <div className="font-mono text-xs text-[var(--av-muted)]">
+              Flight {flight.flightNumber}
+            </div>
+          )}
+          {flight.aircraft && flight.aircraft.filter(Boolean).length > 0 && (
+            <div className="font-mono text-xs text-[var(--av-muted)]">
+              {flight.aircraft.filter(Boolean).join(' → ')}
+            </div>
+          )}
         </div>
       )}
 

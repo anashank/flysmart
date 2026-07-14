@@ -17,6 +17,25 @@ const CABIN_PARAM: Record<CabinClass, string> = {
   FIRST: 'first',
 };
 
+interface TripSegment {
+  FlightNumber: string;
+  AircraftName: string;
+  OriginAirport: string;
+  DestinationAirport: string;
+  DepartsAt: string;
+  ArrivesAt: string;
+}
+
+interface Trip {
+  AvailabilitySegments: TripSegment[];
+  Stops: number;
+  Connections: string[] | null;
+  Aircraft: string[] | null;
+  FlightNumbers: string;
+  Cabin: string;
+  MileageCost: number;
+}
+
 interface SeatsAeroAvailability {
   ID: string;
   Route: { OriginAirport: string; DestinationAirport: string };
@@ -76,6 +95,48 @@ function mapAvailability(raw: SeatsAeroAvailability, cabin: CabinClass): FlightO
     remainingSeats,
     rawData: raw,
   };
+}
+
+function carrierFromFlightNumber(flightNumber: string): string {
+  return flightNumber.match(/^[A-Z0-9]{2}/)?.[0] ?? '';
+}
+
+async function fetchTripDetails(id: string, apiKey: string): Promise<Trip[]> {
+  const res = await fetch(`${BASE_URL}/trips/${id}`, {
+    headers: { 'Partner-Authorization': apiKey },
+  });
+  if (!res.ok) return [];
+  const json = await res.json();
+  return (json.data ?? []) as Trip[];
+}
+
+// Fetch real flight-level detail (flight numbers, connections, aircraft) for an
+// offer via /trips — the /availability endpoint only gives aggregate mileage data.
+async function enrichWithTripDetails(offer: FlightOffer, apiKey: string, cabinParam: string): Promise<FlightOffer> {
+  try {
+    const trips = await fetchTripDetails(offer.id, apiKey);
+    const trip = trips.find((t) => t.Cabin === cabinParam && t.MileageCost === offer.mileageCost) ?? trips.find((t) => t.Cabin === cabinParam);
+    if (!trip) return offer;
+
+    const segments: FlightSegment[] = trip.AvailabilitySegments.map((s) => ({
+      departure: { iataCode: s.OriginAirport, at: s.DepartsAt },
+      arrival: { iataCode: s.DestinationAirport, at: s.ArrivesAt },
+      carrierCode: carrierFromFlightNumber(s.FlightNumber),
+      number: s.FlightNumber,
+      duration: '',
+    }));
+
+    return {
+      ...offer,
+      flightNumber: trip.FlightNumbers,
+      stops: trip.Stops,
+      segments: segments.length > 0 ? segments : offer.segments,
+      connections: trip.Connections ?? [],
+      aircraft: trip.Aircraft ?? [],
+    };
+  } catch {
+    return offer; // enrichment is best-effort — never let it break the base search result
+  }
 }
 
 // Default sources when no wallet is provided — every program the app knows how to book
@@ -147,7 +208,12 @@ export class SeatsAeroAdapter implements FlightAdapter {
         seen.set(key, flight);
       }
     }
-    return Array.from(seen.values());
+    const deduped = Array.from(seen.values());
+
+    // Enrich the (small, deduped) final result set with real flight-level detail
+    return Promise.all(
+      deduped.map((offer) => enrichWithTripDetails(offer, this.apiKey, CABIN_PARAM[params.cabin]))
+    );
   }
 
   async confirmPrice(offer: FlightOffer): Promise<FlightOffer> {

@@ -379,6 +379,8 @@ export async function handleToolCall(
       departure: f.departure,
       arrival: f.arrival,
       stops: f.stops,
+      connections: f.connections,
+      aircraft: f.aircraft,
       cabin: f.cabin,
       program: f.source,
       milesRequired: f.mileageCost,
