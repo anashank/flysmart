@@ -63,14 +63,14 @@ export default function AirportInput({ label, value, onChange, placeholder = 'JF
     if (e.key === 'Escape')    { setOpen(false); }
   }
 
-  const labelClass = 'block text-xs text-[#7a9ab8] uppercase tracking-widest mb-1.5 font-mono';
+  const labelClass = 'block text-xs text-[var(--av-text-dim)] uppercase tracking-widest mb-1.5 font-mono';
 
   return (
     <div ref={containerRef} className="relative">
       <label className={labelClass}>{label}</label>
       <input
         ref={inputRef}
-        className="w-full bg-[var(--av-input)] border border-[var(--av-border)] rounded-lg px-4 py-3 text-[#e2eaf5] placeholder-[#4a6280] focus:outline-none focus:border-[var(--av-accent)] focus:ring-1 focus:ring-[var(--av-accent)]/30 hover:border-[var(--av-accent)]/50 hover:bg-[var(--av-input-hover)] transition-colors font-mono text-sm tracking-wider"
+        className="w-full bg-[var(--av-input)] border border-[var(--av-border)] rounded-lg px-4 py-3 text-[var(--av-text)] placeholder-[var(--av-muted)] focus:outline-none focus:border-[var(--av-accent)] focus:ring-1 focus:ring-[var(--av-accent)]/30 hover:border-[var(--av-accent)]/50 hover:bg-[var(--av-input-hover)] transition-colors font-mono text-sm tracking-wider"
         placeholder={placeholder}
         value={query}
         onChange={handleInput}
@@ -101,10 +101,10 @@ export default function AirportInput({ label, value, onChange, placeholder = 'JF
                 {airport.code}
               </span>
               <span className="flex flex-col min-w-0">
-                <span className="text-[#e2eaf5] text-xs truncate">{airport.city}</span>
-                <span className="text-[#4a6280] text-xs truncate">{airport.name}</span>
+                <span className="text-[var(--av-text)] text-xs truncate">{airport.city}</span>
+                <span className="text-[var(--av-muted)] text-xs truncate">{airport.name}</span>
               </span>
-              <span className="ml-auto text-[#4a6280] text-xs flex-shrink-0">{airport.country}</span>
+              <span className="ml-auto text-[var(--av-muted)] text-xs flex-shrink-0">{airport.country}</span>
             </button>
           ))}
         </div>

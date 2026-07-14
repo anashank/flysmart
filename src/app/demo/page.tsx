@@ -28,7 +28,7 @@ function FlightLoader({ message }: { message: string }) {
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--av-accent)] opacity-60" />
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--av-accent)]" />
         </span>
-        <span className="font-mono text-xs text-[#7a9ab8] tracking-wide">{message}</span>
+        <span className="font-mono text-xs text-[var(--av-text-dim)] tracking-wide">{message}</span>
       </div>
       <style>{`
         @keyframes planeBob {
@@ -165,11 +165,11 @@ export default function DemoPage() {
               }}>
               FlySmart Demo
             </h1>
-            <p className="text-[#7a9ab8] max-w-xl mx-auto text-sm leading-relaxed mb-3">
+            <p className="text-[var(--av-text-dim)] max-w-xl mx-auto text-sm leading-relaxed mb-3">
               Try a live demo of the AI agentic loop — search any route and watch the agent
               autonomously search flights, evaluate redemptions, and stream a recommendation in real time.
             </p>
-            <p className="font-mono text-xs text-[#4a6280]">
+            <p className="font-mono text-xs text-[var(--av-muted)]">
               ✦ Uses sample flight data · No login required · Real AI reasoning
             </p>
           </div>
@@ -178,7 +178,7 @@ export default function DemoPage() {
         <div className="rounded-xl border p-6" style={{ background: 'var(--av-surface)', borderColor: 'var(--av-border)' }}>
           {appState !== 'idle' && (
             <div className="flex items-center gap-2 mb-5">
-              <span className="font-mono text-xs text-[#4a6280] uppercase tracking-widest">New Search</span>
+              <span className="font-mono text-xs text-[var(--av-muted)] uppercase tracking-widest">New Search</span>
             </div>
           )}
           <SearchForm onSearch={handleSearch} loading={isLoading} />
