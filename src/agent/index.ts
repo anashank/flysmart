@@ -39,7 +39,7 @@ One sentence: program → partner (if applicable), points required, CPP value.
 (max 5 steps)
 
 ## ANALYSIS
-2-3 sentences: why this beats alternatives, any pooling opportunity or caveat, fallback option. Bold key figures: **88,000 miles**, **2.3 cents/point**.
+3-5 bullet points, each starting with "- ": why this beats alternatives, any pooling opportunity or caveat, fallback option. One idea per bullet. Bold key figures: **88,000 miles**, **2.3 cents/point**.
 
 Today's date: ${new Date().toISOString().split('T')[0]}`;
 

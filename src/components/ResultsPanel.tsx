@@ -21,6 +21,7 @@ interface ParsedRec {
   bestOption: string;
   steps: string[];
   analysis: string;
+  analysisBullets: string[];
 }
 
 function parseRecommendation(text: string): ParsedRec {
@@ -37,10 +38,17 @@ function parseRecommendation(text: string): ParsedRec {
 
   const clean = (s: string) => s.replace(/^-{2,}\s*$/gm, '').trim();
 
+  const analysis = clean(section('ANALYSIS'));
+  const analysisBullets = analysis
+    .split('\n')
+    .map((l) => l.replace(/^[-*]\s*/, '').trim())
+    .filter((l) => l && !/^-{2,}$/.test(l));
+
   return {
     bestOption: clean(section('BEST OPTION')),
     steps,
-    analysis: clean(section('ANALYSIS')),
+    analysis,
+    analysisBullets,
   };
 }
 
@@ -162,9 +170,18 @@ function RecommendationPanel({ recommendation, streaming }: { recommendation: st
         )}
 
         {tab === 'analysis' && (
-          <p className="text-sm text-[var(--av-text-dim)] leading-relaxed">
-            <Bold text={rec.analysis || 'No additional analysis available.'} />
-          </p>
+          rec.analysisBullets.length > 0 ? (
+            <ul className="space-y-2">
+              {rec.analysisBullets.map((bullet, i) => (
+                <li key={i} className="flex gap-2 text-sm text-[var(--av-text-dim)] leading-relaxed">
+                  <span className="text-[var(--av-accent)] flex-shrink-0">•</span>
+                  <span><Bold text={bullet} /></span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-[var(--av-text-dim)] leading-relaxed">No additional analysis available.</p>
+          )
         )}
       </div>
     </div>
