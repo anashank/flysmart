@@ -20,7 +20,7 @@ function FlightLoader({ message }: { message: string }) {
       <div className="relative h-32 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{ animation: 'planeBob 3s ease-in-out infinite', zIndex: 10 }}>
-          <span style={{ fontSize: 36, lineHeight: 1, display: 'block', color: 'var(--av-accent)', filter: 'drop-shadow(0 0 10px rgba(var(--av-accent),0.6))' }}>✈</span>
+          <span style={{ fontSize: 36, lineHeight: 1, display: 'block', color: 'var(--av-accent)' }}>✈</span>
         </div>
       </div>
       <div className="border-t border-[var(--av-border)] px-5 py-3 flex items-center gap-2.5">

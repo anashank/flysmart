@@ -81,7 +81,7 @@ function RecommendationPanel({ recommendation, streaming }: { recommendation: st
         <div className="rounded-lg border overflow-hidden" style={{ background: 'var(--av-surface)', borderColor: 'var(--av-border)' }}>
           <div className="px-5 pt-5 pb-4 border-b border-[var(--av-border)]">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-[var(--av-accent)] animate-pulse" style={{ boxShadow: '0 0 8px var(--av-accent)' }} />
+              <div className="w-2 h-2 rounded-full bg-[var(--av-accent)] animate-pulse" />
               <span className="font-mono text-xs text-[var(--av-accent)] uppercase tracking-widest">Best Option</span>
             </div>
             <div className="space-y-2">
@@ -113,7 +113,7 @@ function RecommendationPanel({ recommendation, streaming }: { recommendation: st
       {/* Best option header */}
       <div className="px-5 pt-5 pb-4 border-b border-[var(--av-border)]">
         <div className="flex items-center gap-2 mb-3">
-          <div className="w-2 h-2 rounded-full bg-[var(--av-accent)]" style={{ boxShadow: '0 0 8px var(--av-accent)' }} />
+          <div className="w-2 h-2 rounded-full bg-[var(--av-accent)]" />
           <span className="font-mono text-xs text-[var(--av-accent)] uppercase tracking-widest">Best Option</span>
         </div>
         <p className="text-[var(--av-text)] text-sm leading-relaxed font-medium">

@@ -111,17 +111,14 @@ const inputClass =
             ? 'var(--av-input)'
             : 'linear-gradient(135deg, var(--av-accent) 0%, #0099bb 100%)',
           color: loading ? 'var(--av-muted)' : 'var(--av-bg)',
-          boxShadow: loading ? 'none' : '0 0 20px var(--av-glow)',
-          transition: 'box-shadow 0.2s, filter 0.2s',
+          transition: 'filter 0.2s',
         }}
         onMouseEnter={(e) => {
           if (!loading) {
-            (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 40px var(--av-glow)';
-            (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.2)';
+            (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.1)';
           }
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px var(--av-glow)';
           (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1)';
         }}
       >

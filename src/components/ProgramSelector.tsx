@@ -146,7 +146,7 @@ export default function ProgramSelector({ values, onChange }: Props) {
   const dropdown = open ? createPortal(
     <div
       ref={dropdownRef}
-      className="rounded-lg border border-[var(--av-border)] overflow-y-auto shadow-2xl"
+      className="rounded-lg border border-[var(--av-border)] overflow-y-auto shadow-md"
       style={{ ...dropdownStyle, background: 'var(--av-dropdown)' }}
     >
       <Group title="Credit Cards"   currencies={CARDS}    selected={selected} onToggle={toggle} />
