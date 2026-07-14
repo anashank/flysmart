@@ -78,9 +78,11 @@ function mapAvailability(raw: SeatsAeroAvailability, cabin: CabinClass): FlightO
   };
 }
 
-// Default sources when no wallet is provided — most popular programs only (reduces API calls)
+// Default sources when no wallet is provided — every program the app knows how to book
 const ALL_SOURCES = [
-  'aeroplan', 'united', 'flyingblue', 'british', 'virginatlantic',
+  'aeroplan', 'united', 'delta', 'american', 'southwest',
+  'british', 'flyingblue', 'singapore', 'virginatlantic',
+  'emirates', 'turkish', 'ana', 'avianca',
 ];
 
 export class SeatsAeroAdapter implements FlightAdapter {

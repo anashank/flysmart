@@ -21,6 +21,14 @@ const AIRLINE_NAMES: Record<string, string> = {
   SK: 'SAS',               AY: 'Finnair',           TP: 'TAP Air Portugal',
   LO: 'LOT Polish Airlines', A3: 'Aegean Airlines',
   WY: 'Oman Air',          RJ: 'Royal Jordanian',   GF: 'Gulf Air',
+  EY: 'Etihad Airways',    UK: 'Vistara',           FI: 'Icelandair',
+  LY: 'El Al',             SU: 'Aeroflot',          MU: 'China Eastern',
+  CA: 'Air China',         CZ: 'China Southern',    NZ: 'Air New Zealand',
+  QF: 'Qantas',            VA: 'Virgin Australia',  KQ: 'Kenya Airways',
+  LA: 'LATAM Airlines',    AM: 'Aeromexico',        PR: 'Philippine Airlines',
+  GA: 'Garuda Indonesia',  VN: 'Vietnam Airlines',  HA: 'Hawaiian Airlines',
+  FJ: 'Fiji Airways',      WS: 'WestJet',           UL: 'SriLankan Airlines',
+  PK: 'Pakistan International', HX: 'Hong Kong Airlines', VL: 'Med-View Airlines',
 };
 
 const AEROPLAN_CABIN: Record<string, string> = {
@@ -125,21 +133,9 @@ export default function FlightCard({ flight }: Props) {
           <div className="font-mono text-xs text-[var(--av-muted)] text-center">
             {flight.stops === 0
               ? 'Nonstop'
-              : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
-            {flight.stops > 0 && airlineCodes.length > 1 && (
-              <div className="mt-1 flex flex-col items-center gap-0.5">
-                {airlineCodes.map((code, i) => (
-                  <div key={code} className="flex flex-col items-center">
-                    <span className="text-[10px] text-[var(--av-text-dim)]">
-                      {code} · {AIRLINE_NAMES[code] ?? 'Unknown'}
-                    </span>
-                    {i < airlineCodes.length - 1 && (
-                      <span className="text-[9px] text-[var(--av-border)]">↓</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+              : `${flight.stops} stop${flight.stops > 1 ? 's' : ''} · operated by ${airlineCodes
+                  .map((code) => AIRLINE_NAMES[code] ?? code)
+                  .join(' → ')}`}
           </div>
         </div>
         <div className="text-center">
@@ -160,7 +156,7 @@ export default function FlightCard({ flight }: Props) {
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
               <span className="font-mono text-xs text-[var(--av-text-dim)]">
-                {code} · {AIRLINE_NAMES[code] ?? 'Unknown Airline'}
+                {AIRLINE_NAMES[code] ? `${code} · ${AIRLINE_NAMES[code]}` : code}
               </span>
             </div>
           ))}
@@ -223,6 +219,13 @@ function airlineDomain(code: string): string {
     QR: 'qatarairways.com', CX: 'cathaypacific.com', JL: 'jal.com', IB: 'iberia.com',
     AI: 'airindia.in', AY: 'finnair.com', SK: 'flysas.com', TP: 'flytap.com', EI: 'aerlingus.com',
     LO: 'lot.com', A3: 'aegeanair.com', WY: 'omanair.com', RJ: 'rj.com', GF: 'gulfair.com',
+    EY: 'etihad.com', UK: 'airvistara.com', FI: 'icelandair.com', LY: 'elal.com',
+    SU: 'aeroflot.ru', MU: 'ceair.com', CA: 'airchina.com', CZ: 'csair.com',
+    NZ: 'airnewzealand.com', QF: 'qantas.com', VA: 'virginaustralia.com',
+    KQ: 'kenya-airways.com', LA: 'latamairlines.com', AM: 'aeromexico.com',
+    PR: 'philippineairlines.com', GA: 'garuda-indonesia.com', VN: 'vietnamairlines.com',
+    HA: 'hawaiianairlines.com', FJ: 'fijiairways.com', WS: 'westjet.com',
+    UL: 'srilankan.com', PK: 'piac.com.pk', HX: 'hongkongairlines.com',
   };
   return domains[code] ?? 'google.com';
 }
