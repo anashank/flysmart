@@ -122,8 +122,21 @@ Please always call search_flights first to find available award space, then give
         );
 
         if (flights) {
+          // Claude can call search tools with any origin/destination it wants (e.g. to
+          // explore positioning-flight ideas like SEA->DXB->MAA when SEA->MAA has no
+          // nonstop award space). Tag offers that don't match the literal requested
+          // route so the UI can visually separate them instead of mixing them into a
+          // list labelled "{origin} → {destination}".
+          const requestedOrigin = input.origin.toUpperCase();
+          const requestedDestination = input.destination.toUpperCase();
+          const matchesRoute = (f: FlightOffer) =>
+            f.segments[0]?.departure.iataCode === requestedOrigin &&
+            f.segments[f.segments.length - 1]?.arrival.iataCode === requestedDestination;
+
           const existingIds = new Set(allFlights.map((f) => `${f.airline}|${f.source}|${f.cabin}`));
-          const newFlights = flights.filter((f) => !existingIds.has(`${f.airline}|${f.source}|${f.cabin}`));
+          const newFlights = flights
+            .filter((f) => !existingIds.has(`${f.airline}|${f.source}|${f.cabin}`))
+            .map((f) => ({ ...f, matchesSearch: matchesRoute(f) }));
           allFlights.push(...newFlights);
           if (newFlights.length > 0) onEvent({ type: 'flights', flights: newFlights });
         }

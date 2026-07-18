@@ -2,6 +2,7 @@ import type { FlightOffer } from '@/adapters/types';
 
 interface Props {
   flight: FlightOffer;
+  variant?: 'direct' | 'alternate';
 }
 
 // IATA carrier code → full airline name
@@ -88,8 +89,9 @@ function programLabel(source: string): string {
   return labels[source] ?? source;
 }
 
-export default function FlightCard({ flight }: Props) {
+export default function FlightCard({ flight, variant = 'direct' }: Props) {
   const badgeColor = cabinBadgeColor(flight.cabin);
+  const isAlternate = variant === 'alternate';
   const origin = flight.segments[0]?.departure.iataCode ?? '---';
   const dest   = flight.segments[flight.segments.length - 1]?.arrival.iataCode ?? '---';
 
@@ -103,13 +105,27 @@ export default function FlightCard({ flight }: Props) {
   return (
     <div
       className="rounded-lg border p-4 transition-all duration-200 hover:border-[var(--av-accent)]/40"
-      style={{ background: 'var(--av-surface)', borderColor: 'var(--av-border)' }}
+      style={{
+        background: 'var(--av-surface)',
+        borderColor: isAlternate ? '#a78bfa40' : 'var(--av-border)',
+        borderStyle: isAlternate ? 'dashed' : 'solid',
+      }}
     >
-      {/* Header: program badge + cabin */}
+      {/* Header: program badge + cabin (+ alt-route badge) */}
       <div className="flex items-center justify-between mb-3">
-        <span className="font-mono text-xs px-2 py-0.5 rounded bg-[var(--av-input)] text-[var(--av-text-dim)] border border-[var(--av-border)]">
-          {programLabel(flight.source ?? '')}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs px-2 py-0.5 rounded bg-[var(--av-input)] text-[var(--av-text-dim)] border border-[var(--av-border)]">
+            {programLabel(flight.source ?? '')}
+          </span>
+          {isAlternate && (
+            <span
+              className="font-mono text-[10px] px-1.5 py-0.5 rounded uppercase tracking-widest"
+              style={{ color: '#a78bfa', background: '#a78bfa1a', border: '1px solid #a78bfa40' }}
+            >
+              Alt Route
+            </span>
+          )}
+        </div>
         <span
           className="font-mono text-xs px-2 py-0.5 rounded border"
           style={{ color: badgeColor, borderColor: `${badgeColor}40` }}

@@ -189,6 +189,9 @@ function RecommendationPanel({ recommendation, streaming }: { recommendation: st
 }
 
 export default function ResultsPanel({ flights, recommendation, searchParams, streaming }: Props) {
+  const direct = flights.filter((f) => f.matchesSearch !== false);
+  const alternate = flights.filter((f) => f.matchesSearch === false);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
       {/* Flights column */}
@@ -199,7 +202,7 @@ export default function ResultsPanel({ flights, recommendation, searchParams, st
               Available Flights
             </h2>
             <p className="font-mono text-[var(--av-muted)] text-xs mt-0.5">
-              {searchParams.origin} → {searchParams.destination} · {flights.length} result{flights.length !== 1 ? 's' : ''}
+              {searchParams.origin} → {searchParams.destination} · {direct.length} result{direct.length !== 1 ? 's' : ''}
             </p>
           </div>
           <WatchButton
@@ -211,13 +214,34 @@ export default function ResultsPanel({ flights, recommendation, searchParams, st
         </div>
 
         <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
-          {flights.length === 0 ? (
+          {direct.length === 0 ? (
             <div className="rounded-lg border border-[var(--av-border)] p-6 text-center">
               <p className="font-mono text-[var(--av-muted)] text-sm">No flights found for this route.</p>
               <p className="font-mono text-[var(--av-muted)] text-xs mt-1">Try different dates or a nearby airport.</p>
             </div>
           ) : (
-            flights.slice(0, 8).map((f, i) => <FlightCard key={`${f.id}-${f.source ?? ''}-${i}`} flight={f} />)
+            direct.slice(0, 8).map((f, i) => <FlightCard key={`${f.id}-${f.source ?? ''}-${i}`} flight={f} />)
+          )}
+
+          {alternate.length > 0 && (
+            <div className="pt-2">
+              <div className="flex items-center gap-2 mb-3">
+                <span
+                  className="font-mono text-[10px] px-1.5 py-0.5 rounded uppercase tracking-widest"
+                  style={{ color: '#a78bfa', background: '#a78bfa1a', border: '1px solid #a78bfa40' }}
+                >
+                  Alt Route
+                </span>
+                <span className="font-mono text-xs text-[var(--av-muted)]">
+                  Positioning-flight ideas — not a direct {searchParams.origin} → {searchParams.destination} match
+                </span>
+              </div>
+              <div className="space-y-3">
+                {alternate.slice(0, 4).map((f, i) => (
+                  <FlightCard key={`alt-${f.id}-${f.source ?? ''}-${i}`} flight={f} variant="alternate" />
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>

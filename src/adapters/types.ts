@@ -37,6 +37,8 @@ export interface FlightOffer {
   remainingSeats?: number;
   connections?: string[];   // IATA codes of connecting airports, in order
   aircraft?: string[];      // aircraft type per segment (e.g. "Airbus A330-300")
+  matchesSearch?: boolean;  // false when the agent explored a different route (e.g. a
+                             // positioning-flight idea) than the one the user searched for
   rawData: unknown;
 }
 
