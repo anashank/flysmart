@@ -1,5 +1,5 @@
 import type { Tool, ToolResultBlockParam } from '@anthropic-ai/sdk/resources/messages';
-import { seatsAeroAdapter } from '@/adapters/seats-aero';
+import { seatsAeroAdapter, isRateLimitLow, CORE_SOURCES } from '@/adapters/seats-aero';
 import { PROGRAMS, type PointsCurrency } from '@/data/programs';
 import type { FlightOffer, FlightAdapter, CabinClass } from '@/adapters/types';
 
@@ -34,6 +34,14 @@ function sourcesForBalances(balances: Partial<Record<PointsCurrency, number>>): 
     mapped.forEach((s) => sources.add(s));
   }
   return sources.size > 0 ? Array.from(sources) : []; // empty = search all
+}
+
+// Multi-date/multi-airport scans multiply source count by every date or airport
+// tried, so — unlike a single-date search_flights call — they should never let
+// the adapter auto-widen past the core programs; pass an explicit capped list.
+function exploratorySources(balances: Partial<Record<PointsCurrency, number>>): string[] {
+  const wallet = sourcesForBalances(balances);
+  return wallet.length > 0 ? wallet : CORE_SOURCES;
 }
 
 // ── Nearby airport clusters ─────────────────────────────────────────────────
@@ -348,14 +356,39 @@ export const TOOLS: Tool[] = [
   },
 ];
 
+// Per-agent-run call budget — Claude has full autonomy to re-invoke any tool
+// across its turn loop, and each of these can fan out to many Seats.aero calls
+// internally (a single search_nearby_dates can already cost 5-75+ calls). Without
+// a hard per-run cap, a stubborn search (e.g. a route with no tracked award
+// space) can spiral into hundreds of repeated calls across turns.
+const TOOL_CALL_LIMITS: Record<string, number> = {
+  search_flights: 4,
+  search_nearby_dates: 1,
+  search_nearby_airports: 1,
+};
+
 // ── Tool call handler ─────────────────────────────────────────────────────────
 export async function handleToolCall(
   toolName: string,
   toolInput: Record<string, unknown>,
   flightCache: Map<string, FlightOffer[]>,
   pointsBalances: Partial<Record<PointsCurrency, number>> = {},
-  adapter: FlightAdapter = seatsAeroAdapter
+  adapter: FlightAdapter = seatsAeroAdapter,
+  callCounts: Map<string, number> = new Map()
 ): Promise<{ result: ToolResultBlockParam['content']; flights?: FlightOffer[] }> {
+  const limit = TOOL_CALL_LIMITS[toolName];
+  if (limit !== undefined) {
+    const used = (callCounts.get(toolName) ?? 0) + 1;
+    callCounts.set(toolName, used);
+    if (used > limit) {
+      return {
+        result: JSON.stringify({
+          skipped: true,
+          reason: `${toolName} has already been called ${limit} time(s) this search — further calls are blocked to avoid burning through the Seats.aero quota. Answer using what has already been found.`,
+        }),
+      };
+    }
+  }
 
   // ── search_flights ─────────────────────────────────────────────────────────
   if (toolName === 'search_flights') {
@@ -403,6 +436,15 @@ export async function handleToolCall(
     const daysBefore  = Math.min(Number(toolInput.days_before ?? 3), 7);
     const daysAfter   = Math.min(Number(toolInput.days_after ?? 3), 7);
 
+    if (isRateLimitLow()) {
+      return {
+        result: JSON.stringify({
+          skipped: true,
+          reason: 'Seats.aero daily quota is nearly exhausted — skipped nearby-date scan to preserve remaining calls. Answer using only what has already been found.',
+        }),
+      };
+    }
+
     const dateResults: Array<{
       date: string;
       programsAvailable: number;
@@ -413,8 +455,10 @@ export async function handleToolCall(
     const allFlights: FlightOffer[] = [];
 
     for (let d = -daysBefore; d <= daysAfter; d++) {
+      if (isRateLimitLow()) break; // quota dropped mid-scan — stop and use what we have
+
       const date = addDays(targetDate, d);
-      const flights = await adapter.searchFlights({ origin, destination, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
+      const flights = await adapter.searchFlights({ origin, destination, date, cabin, adults, sources: exploratorySources(pointsBalances) });
 
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
@@ -457,6 +501,15 @@ export async function handleToolCall(
     const checkOrigin = toolInput.check_origin_alternates !== false;
     const checkDest   = toolInput.check_destination_alternates !== false;
 
+    if (isRateLimitLow()) {
+      return {
+        result: JSON.stringify({
+          skipped: true,
+          reason: 'Seats.aero daily quota is nearly exhausted — skipped nearby-airport scan to preserve remaining calls. Answer using only what has already been found.',
+        }),
+      };
+    }
+
     const altOrigins      = checkOrigin ? (NEARBY_AIRPORTS[origin] ?? []) : [];
     const altDestinations = checkDest   ? (NEARBY_AIRPORTS[destination] ?? []) : [];
 
@@ -480,7 +533,9 @@ export async function handleToolCall(
     const allFlights: FlightOffer[] = [];
 
     for (const combo of searches) {
-      const flights = await adapter.searchFlights({ ...combo, date, cabin, adults, sources: sourcesForBalances(pointsBalances) });
+      if (isRateLimitLow()) break; // quota dropped mid-scan — stop and use what we have
+
+      const flights = await adapter.searchFlights({ ...combo, date, cabin, adults, sources: exploratorySources(pointsBalances) });
       const available = flights.filter((f) => f.available !== false);
       const programs = available.map((f) => ({
         program: f.source ?? '',

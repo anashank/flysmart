@@ -75,6 +75,7 @@ export async function runAgentStream(
   adapter?: FlightAdapter
 ): Promise<void> {
   const flightCache = new Map<string, FlightOffer[]>();
+  const callCounts = new Map<string, number>();
   const allFlights: FlightOffer[] = [];
 
   const userMessage = `Find me the best award flight strategy for this trip:
@@ -118,7 +119,8 @@ Please always call search_flights first to find available award space, then give
           block.input as Record<string, unknown>,
           flightCache,
           input.pointsBalances,
-          adapter
+          adapter,
+          callCounts
         );
 
         if (flights) {
