@@ -270,7 +270,7 @@ export default function Home() {
             ) : (
               <>
                 <p className="font-mono text-sm text-red-400">Error: {error}</p>
-                <p className="font-mono text-xs text-red-600">Check the terminal (npm run dev) for the full server-side error.</p>
+                <p className="font-mono text-xs text-red-600">Please try again. If this keeps happening, contact support.</p>
               </>
             )}
           </div>

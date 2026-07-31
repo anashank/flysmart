@@ -1,8 +1,20 @@
 import { NextRequest } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { runAgentStream } from '@/agent';
+import { checkSearchRateLimit } from '@/lib/rate-limit';
 import type { PointsCurrency } from '@/data/programs';
 
 export async function POST(req: NextRequest) {
+  const { userId } = await auth();
+  if (!userId) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  }
+
+  const rateLimit = checkSearchRateLimit(userId);
+  if (!rateLimit.allowed) {
+    return new Response(JSON.stringify({ error: rateLimit.reason }), { status: 429 });
+  }
+
   const body = await req.json();
   const { origin, destination, date, cabin, adults, pointsBalances } = body as {
     origin: string;
